@@ -1,17 +1,33 @@
 import {
-  Card,
-  Spacer,
-  Button,
-  Text,
-  Input,
-  Row,
-  Checkbox,
-  Container,
-} from '@nextui-org/react';
+  Card, Spacer, Button,
+  Text, Input, Row, Container,
+} from '@nextui-org/react'
+import Head from 'next/head'
+import validate from 'node-email-validator'
+import { useState } from 'react'
 
 export default function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  async function login() {
+    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+      setErrorMessage("please enter a valid email")
+      return
+    }
+    if (!password) {
+      setErrorMessage("please enter a password")
+      return
+    }
+    setErrorMessage("Loading...")
+  }
+
   return (
-    <div>
+    <>
+      <Head>
+        <title>Log In</title>
+      </Head>
       <Container
         display="flex"
         alignItems="center"
@@ -29,27 +45,20 @@ export default function Login() {
           >
             Eisenhauer Backend Login
           </Text>
-          <Input
-            clearable
-            bordered
-            fullWidth
-            color="primary"
-            size="lg"
-            placeholder="Email"
-          />
-          <Spacer y={1} />
-          <Input
-            clearable
-            bordered
-            fullWidth
-            color="primary"
-            size="lg"
-            placeholder="Password"
-          />
-          <Spacer y={1} />
-          <Button>Log in</Button>
+            <Input aria-label="email"
+              bordered fullWidth
+              color="primary" size="lg" placeholder="Email"
+              onChange={e => setEmail(e.currentTarget.value)}
+            />
+            <Spacer y={1} />
+          <Input aria-label="password" bordered fullWidth 
+            type="password" color="primary" size="lg" placeholder="Password"
+              onChange={e => setPassword(e.currentTarget.value)}
+            />
+            <Text color="error">{errorMessage}</Text>
+            <Button onPress={e => login()}>Log in</Button>
         </Card>
       </Container>
-    </div>
+    </>
   );
 }
