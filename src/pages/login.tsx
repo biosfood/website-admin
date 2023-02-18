@@ -6,14 +6,16 @@ import Head from 'next/head'
 import validate from 'node-email-validator'
 import { useState } from 'react'
 import { login as doLogin } from '@/api'
-
+import { useRouter } from "next/router";
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const router = useRouter()
   const [errorMessage, setErrorMessage] = useState('');
 
-  async function login() {
+  async function login(e) {
+    e.preventDefault()
+    const email = document.querySelector("#emailInput").value
+    const password = document.querySelector("#passwordInput").value
     if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
       setErrorMessage("please enter a valid email")
       return
@@ -28,7 +30,8 @@ export default function Login() {
         setErrorMessage("access denied")
         return
       }
-      setErrorMessage("Success!")
+      setErrorMessage("Success, redirecting...")
+      router.push("/admin/")
     })
   }
 
@@ -54,18 +57,20 @@ export default function Login() {
           >
             Eisenhauer Backend Login
           </Text>
+          <form onSubmit={login}>
             <Input aria-label="email"
               bordered fullWidth
               color="primary" size="lg" placeholder="Email"
-              onChange={e => setEmail(e.currentTarget.value)}
+              id="emailInput"
             />
             <Spacer y={1} />
-          <Input aria-label="password" bordered fullWidth 
-            type="password" color="primary" size="lg" placeholder="Password"
-              onChange={e => setPassword(e.currentTarget.value)}
+            <Input aria-label="password" bordered fullWidth 
+              type="password" color="primary" size="lg" placeholder="Password"
+              id="passwordInput"
             />
             <Text color="error">{errorMessage}</Text>
-            <Button onPress={e => login()}>Log in</Button>
+            <Button type="submit" css={{width: '100%'}}>Log in</Button>
+        </form>
         </Card>
       </Container>
     </>

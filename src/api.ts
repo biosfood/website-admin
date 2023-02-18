@@ -20,5 +20,37 @@ function processPassword(password: string) {
 export function login(email: string, password: string) {
   return doGraphQl(
     `mutation Login($email: String, $password: String) {login(email: $email, password: $password)}`,
-    {email, password: processPassword(password)})
+    {email, password: processPassword(password)}).then(response => {
+      if (response.data.login) {
+        localStorage.setItem("token", response.data.login)
+      }
+      return response
+    })
+}
+
+export interface UserAccount {
+  name: string
+  email: string
+}
+
+export function getUserData(router) {
+  const token = localStorage.getItem("token")
+  if (!token) {
+    router.push("/login")
+    return new Promise((resolve, reject) => resolve(null))
+  }
+  return doGraphQl('query GetUserData($token: String) {userData(token: $token) {name, email}}', {token})
+  .then(response => {
+    if (!response?.data?.userData?.name) {
+      localStorage.removeItem("token")
+      return null
+    }
+    const account: UserAccount = response.data.userData
+    return account
+  }).then(account => {
+    if (!account) {
+      router.push("/login")
+    }
+    return account
+  })
 }
