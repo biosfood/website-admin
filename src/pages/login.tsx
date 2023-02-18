@@ -7,6 +7,7 @@ import validate from 'node-email-validator'
 import { useState } from 'react'
 import { login as doLogin } from '@/api'
 
+
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -22,7 +23,13 @@ export default function Login() {
       return
     }
     setErrorMessage("Loading...")
-    doLogin(email, password).then(r => console.log(r))
+    doLogin(email, password).then(response => {
+      if (!response.data.login) {
+        setErrorMessage("access denied")
+        return
+      }
+      setErrorMessage("Success!")
+    })
   }
 
   return (
