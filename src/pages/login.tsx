@@ -5,6 +5,7 @@ import {
 import Head from 'next/head'
 import validate from 'node-email-validator'
 import { useState } from 'react'
+import { login as doLogin } from '@/api'
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -21,6 +22,7 @@ export default function Login() {
       return
     }
     setErrorMessage("Loading...")
+    doLogin(email, password).then(r => console.log(r))
   }
 
   return (

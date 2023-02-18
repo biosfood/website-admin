@@ -4,6 +4,9 @@ const nextConfig = {
   serverRuntimeConfig: {
     measure: false,
   },
+  env: {
+    api: 'localhost:4000',
+  },
 }
 
 module.exports = nextConfig
