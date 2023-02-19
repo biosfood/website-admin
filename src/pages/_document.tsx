@@ -1,20 +1,15 @@
 import { Html, Head, Main, NextScript } from 'next/document'
-import { createTheme, NextUIProvider } from "@nextui-org/react"
 import { ThemeProvider } from 'next-themes';
-
-const theme = createTheme({type: "dark",})
+import { CssBaseline } from '@nextui-org/react';
 
 export default function Document() {
   return (
     <Html lang="en">
-      <Head />
+      <Head>{CssBaseline.flush()}
+      </Head>
       <body>
-        <ThemeProvider defaultTheme="dark" attribute="class" value={{dark: theme}}>
-          <NextUIProvider theme={theme}>
-            <Main />
-            <NextScript />
-          </NextUIProvider>
-        </ThemeProvider>
+        <Main />
+        <NextScript />
       </body>
     </Html>
   )

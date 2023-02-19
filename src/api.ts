@@ -47,10 +47,5 @@ export function getUserData(router) {
     }
     const account: UserAccount = response.data.userData
     return account
-  }).then(account => {
-    if (!account) {
-      router.push("/login")
-    }
-    return account
   })
 }
