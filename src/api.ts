@@ -36,7 +36,6 @@ export interface UserAccount {
 export function getUserData(router) {
   const token = localStorage.getItem("token")
   if (!token) {
-    router.push("/login")
     return new Promise((resolve, reject) => resolve(null))
   }
   return doGraphQl('query GetUserData($token: String) {userData(token: $token) {name, email}}', {token})
@@ -47,5 +46,16 @@ export function getUserData(router) {
     }
     const account: UserAccount = response.data.userData
     return account
+  })
+}
+
+export function loadAssets() {
+  const token = localStorage.getItem("token")
+  if (!token) {
+    return new Promise((resolve, reject) => resolve([]))
+  }
+  return doGraphQl('query GetAssets($token: String) {resources(token: $token) {id, name, preview}}', {token})
+  .then(response => {
+    return response.data.resources
   })
 }
