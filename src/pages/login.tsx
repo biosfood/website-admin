@@ -68,7 +68,9 @@ export default function Login() {
               type="password" color="primary" size="lg" placeholder="Password"
               id="passwordInput"
             />
+            <Spacer y={1} />
             <Text color="error">{errorMessage}</Text>
+            <Spacer y={1} />
             <Button type="submit" css={{width: '100%'}}>Log in</Button>
         </form>
         </Card>

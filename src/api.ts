@@ -14,7 +14,7 @@ function doGraphQl(query: string, variables) {
 function processPassword(password: string) {
   const hash = createHash("sha256")
   hash.update(password + "EISENHAUER backend Password")
-  return "MD5-" + hash.digest("base64") // :)
+  return "MD5-" + hash.digest("base64") // ;)
 }
 
 export function login(email: string, password: string) {
@@ -58,4 +58,15 @@ export function loadAssets() {
   .then(response => {
     return response.data.resources
   })
+}
+
+export function createAsset(name, preview, content) {
+  const token = localStorage.getItem("token")
+  if (!token) {
+    return new Promise((resolve, reject) => resolve(null))
+  }
+  return doGraphQl('mutation CreateResource($token: String, $name: String, $preview: String, $content: String)'+
+                   '{createResource(token: $token, name: $name, preview: $preview, content: $content) {id} }',
+                  {token, name, preview, content})
+  .then(response => response.data.createResource)
 }
