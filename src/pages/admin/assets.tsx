@@ -16,7 +16,7 @@ export default function Assets() {
       }
     })
   }
-  useEffect(updateAssets, [])
+  useEffect(updateAssets, [context.token])
   
   const [filesToProcess, setFiles] = useState(new Array())
   function onFileDrop(file) {
@@ -51,7 +51,7 @@ export default function Assets() {
       }
 
       function upload() {
-        createAsset(titleRef.current.value, imageSource, reader.result)
+        createAsset(context, titleRef.current.value, imageSource, reader.result)
         updateAssets()
         endUpload()
       }
@@ -87,7 +87,7 @@ export default function Assets() {
                 <Card.Header style={{display: 'flex', justifyContent: 'space-between'}}>
                   <Text h3>{asset.name}</Text>
                   <Button auto color="error" icon={<Delete />} onPress={async () => {
-                    await deleteResource(asset.id);
+                    await deleteResource(context, asset.id);
                     updateAssets();
                     }}/>
                 </Card.Header>
