@@ -5,6 +5,7 @@ import { getUserData } from '@/api'
 const defaultContext = {
   username: '',
   useremail: '',
+  currentPath: '',
   router: undefined,
 }
 
@@ -12,19 +13,25 @@ const GlobalContext = createContext(defaultContext)
 export const useGlobalContext = () => useContext(GlobalContext)
 
 export function ContextProvider({children}) {
-  const [context, setContext] = useState({...defaultContext, router: useRouter()})
-  const enforceLogin = context.router.pathname.startsWith("/admin")
+  const router = useRouter()
+  const [context, setContext] = useState({...defaultContext, router})
 
-  useEffect(() => {
-    getUserData(context.router).then(userData => {
+  function updateContext() {
+    const enforceLogin = context.router.pathname.startsWith("/admin")
+    getUserData(GlobalContext.router).then(userData => {
       if (enforceLogin && !userData) {
         context.router.push("/login")
         return
       }
-      setContext({...context, username: userData.name, useremail: userData.email})
+      if (userData) {
+        setContext({...context, username: userData.name, useremail: userData.email})
+      }
     })
-  }, []);
-  
+    setContext({...context, updateContext, currentPath: context.router.pathname})
+  }
+  useEffect(updateContext, [router.asPath])
+  useEffect(updateContext, [])
+ 
   return (
     <GlobalContext.Provider value={{context, setContext}}>
       {children}

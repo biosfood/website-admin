@@ -1,4 +1,5 @@
 import {createHash} from 'crypto'
+import { useGlobalContext } from '@/context'
 
 function doGraphQl(query: string, variables) {
   return fetch("http://localhost:4000/graphql", {
@@ -33,7 +34,7 @@ export interface UserAccount {
   email: string
 }
 
-export function getUserData(router) {
+export function getUserData() {
   const token = localStorage.getItem("token")
   if (!token) {
     return new Promise((resolve, reject) => resolve(null))
@@ -79,4 +80,11 @@ export function deleteResource(id) {
   return doGraphQl('mutation DeleteResource($token: String, $id: Int)'+
                    '{deleteResource(token: $token, id: $id) }',
                   {token, id})
+}
+
+export function logout({context, setContext}) {
+  console.log("logging out")
+  localStorage.removeItem("token")
+  setContext({...context, username: '', useremail: ''})
+  context.updateContext()
 }

@@ -1,13 +1,13 @@
-import { Navbar, Dropdown, Avatar, Text } from '@nextui-org/react'
+import { Navbar, Dropdown, Avatar, Text, Button } from '@nextui-org/react'
 import { useGlobalContext } from '@/context'
 import { useState } from 'react'
+import { logout } from '@/api'
 
 export function Navigation({pages, enforceLogin, setUserState}) {
   const {context, setContext} = useGlobalContext()
   const [avatarSource, setAvatarSource ] = useState('')
   function CustomLink({ target, children}) {
-    const path = context.router.pathname
-    if (path == target || path == target + "/") {
+    if (context.currentPath == target || context.currentPath == target + "/") {
       return (
         <Navbar.Link isActive href={target}>
           {children}
@@ -29,7 +29,8 @@ export function Navigation({pages, enforceLogin, setUserState}) {
           {page.name}
         </CustomLink>)}
       </Navbar.Content>
-      <Navbar.Content css={{ w: "12%", jc: "flex-end"}}>
+      <Navbar.Content css={{jc: "flex-end"}}>
+        {context.username ? (
         <Dropdown placement="bottom-right">
           <Navbar.Item>
             <Dropdown.Trigger>
@@ -43,11 +44,13 @@ export function Navigation({pages, enforceLogin, setUserState}) {
             <Dropdown.Item key="settings" withDivider>
               Settings
             </Dropdown.Item>
-            <Dropdown.Item key="logout" withDivider color="error">
-              Log Out
+            <Dropdown.Item key="logout" withDivider>
+              <Button flat color="error" onPress={() => logout({context, setContext})}>Log Out</Button>
             </Dropdown.Item>
           </Dropdown.Menu>
-        </Dropdown>
+        </Dropdown>) : (
+          <Navbar.Link color="secondary" href="/login" aria-label="Log in">Log in</Navbar.Link>
+        )}
       </Navbar.Content>
     </Navbar>
   )

@@ -1,4 +1,3 @@
-import { adminPages } from '@/pages/admin/index'
 import { Navigation } from '@/navigation'
 import { Grid, Card, Row, Button, Text, Image as NextImage, Input, Spacer } from '@nextui-org/react';
 import { loadAssets, createAsset, deleteResource } from '@/api'
@@ -76,7 +75,6 @@ export default function Assets() {
 
   return (
     <>
-      <Navigation pages={adminPages} />
       <Grid.Container gap={2} justify="center">
         <Grid md id={"FILE"}>
           <File style={{width: '100%'}}/>
