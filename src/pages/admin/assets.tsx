@@ -1,9 +1,10 @@
 import { adminPages } from '@/pages/admin/index'
 import { Navigation } from '@/navigation'
 import { Grid, Card, Row, Button, Text, Image as NextImage, Input, Spacer } from '@nextui-org/react';
-import { loadAssets, createAsset } from '@/api'
+import { loadAssets, createAsset, deleteResource } from '@/api'
 import { useEffect, useState, useRef } from 'react';
 import { FileDropZone } from '@/fileDropZone'
+import { Delete } from 'react-iconly'
 
 export default function Assets() {
   const [assets, setAssets] = useState(new Array())
@@ -77,13 +78,19 @@ export default function Assets() {
     <>
       <Navigation pages={adminPages} />
       <Grid.Container gap={2} justify="center">
-        <Grid md>
-          <File/>
+        <Grid md id={"FILE"}>
+          <File style={{width: '100%'}}/>
         </Grid>
         {assets.map((asset) => (
-            <Grid md id={"ASSET-"+asset.id}>
+            <Grid md id={"ASSET-"+asset.id} style={{width: '100%'}}>
               <Card>
-                <Card.Header><Text h3>{asset.name}</Text></Card.Header>
+                <Card.Header style={{display: 'flex', justifyContent: 'space-between'}}>
+                  <Text h3>{asset.name}</Text>
+                  <Button auto color="error" icon={<Delete />} onPress={async () => {
+                    await deleteResource(asset.id);
+                    updateAssets();
+                    }}/>
+                </Card.Header>
                 <Card.Body>
                   <NextImage src={asset.preview} width={128} height={128} css={{scale: 2}}/>
                 </Card.Body>

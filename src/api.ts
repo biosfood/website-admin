@@ -70,3 +70,13 @@ export function createAsset(name, preview, content) {
                   {token, name, preview, content})
   .then(response => response.data.createResource)
 }
+
+export function deleteResource(id) {
+  const token = localStorage.getItem("token")
+  if (!token) {
+    return new Promise((resolve, reject) => resolve(null))
+  }
+  return doGraphQl('mutation DeleteResource($token: String, $id: Int)'+
+                   '{deleteResource(token: $token, id: $id) }',
+                  {token, id})
+}
