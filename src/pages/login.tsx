@@ -7,10 +7,12 @@ import validate from 'node-email-validator'
 import { useState } from 'react'
 import { login as doLogin } from '@/api'
 import { useRouter } from "next/router";
+import {useGlobalContext} from '@/context'
 
 export default function Login() {
   const router = useRouter()
   const [errorMessage, setErrorMessage] = useState('');
+  const {context, setContext} = useGlobalContext()
 
   async function login(e) {
     e.preventDefault()
@@ -25,7 +27,7 @@ export default function Login() {
       return
     }
     setErrorMessage("Loading...")
-    doLogin(email, password).then(response => {
+    doLogin(context, setContext, email, password).then(response => {
       if (!response.data.login) {
         setErrorMessage("access denied")
         return

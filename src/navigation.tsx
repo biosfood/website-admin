@@ -2,23 +2,16 @@ import { Navbar, Dropdown, Avatar, Text, Button } from '@nextui-org/react'
 import { useGlobalContext } from '@/context'
 import { useState } from 'react'
 import { logout } from '@/api'
+import { useRouter } from "next/router";
 
 export function Navigation({pages, enforceLogin, setUserState}) {
   const {context, setContext} = useGlobalContext()
   const [avatarSource, setAvatarSource ] = useState('')
+  const router = useRouter()
+
   function CustomLink({ target, children}) {
-    if (context.currentPath == target || context.currentPath == target + "/") {
-      return (
-        <Navbar.Link isActive href={target}>
-          {children}
-        </Navbar.Link>
-      )
-    }
-    return (
-      <Navbar.Link href={target}>
-        {children}
-      </Navbar.Link>
-    )
+    return router.pathname == target ? (<Navbar.Link isActive href={target}>{children}</Navbar.Link>)
+            : (<Navbar.Link href={target}>{children}</Navbar.Link>)
   }
 
   return (

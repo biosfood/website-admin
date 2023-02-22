@@ -4,11 +4,13 @@ import { loadAssets, createAsset, deleteResource } from '@/api'
 import { useEffect, useState, useRef } from 'react';
 import { FileDropZone } from '@/fileDropZone'
 import { Delete } from 'react-iconly'
+import {useGlobalContext} from '@/context'
 
 export default function Assets() {
   const [assets, setAssets] = useState(new Array())
+  const {context, setContext} = useGlobalContext()
   const updateAssets = () => {
-    loadAssets().then(newAssets => {
+    loadAssets(context).then(newAssets => {
       if (newAssets) {
         setAssets(newAssets)
       }
