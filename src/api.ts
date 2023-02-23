@@ -69,4 +69,5 @@ export function setProfilePicture(context, setContext, id) {
 
 export function retrieveAsset(context, id) {
   return doGraphQl('query GetAsset($token: String, $id: Int) {resource(token: $token, id: $id) {content}}', {token: context.token, id})
+  .then(response => response.data?.resource?.content)
 }

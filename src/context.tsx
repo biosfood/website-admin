@@ -6,7 +6,7 @@ const defaultContext = {
   useremail: '',
   path: '',
   token: '???',
-  profilePicture: 0,
+  profilePicture: null,
 }
 
 const GlobalContext = createContext(defaultContext)

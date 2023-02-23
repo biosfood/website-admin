@@ -1,6 +1,7 @@
 import {useGlobalContext} from '@/context'
 import { Card, Text, Container, Spacer } from '@nextui-org/react'
 import {AssetPicker} from '@/assetPicker'
+import {setProfilePicture} from '@/api'
 
 export default function Settings() {
   const { context, setContext} = useGlobalContext();
@@ -11,7 +12,9 @@ export default function Settings() {
       <Card>
         <Card.Header><Text h2>Profile picture</Text></Card.Header>
         <Card.Body><AssetPicker selection={context.profilePicture} 
-        onPick={id => setProfilePicture(context, setContext, id)}/></Card.Body>
+          onPick={asset => {setContext({...context, profilePicture: asset});
+          asset ? setProfilePicture(context, setContext, asset.id) : null}}/>
+        </Card.Body>
       </Card>
     </Container>
   )
