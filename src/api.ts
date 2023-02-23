@@ -62,3 +62,11 @@ export function deleteResource(context, id) {
 export function logout({context, setContext}) {
   setContext({...context, username: '', useremail: '', token: 'REMOVE_NOW'})
 }
+
+export function setProfilePicture(context, setContext, id) {
+// TODO
+}
+
+export function retrieveAsset(context, id) {
+  return doGraphQl('query GetAsset($token: String, $id: Int) {resource(token: $token, id: $id) {content}}', {token: context.token, id})
+}

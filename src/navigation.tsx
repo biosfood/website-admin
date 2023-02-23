@@ -1,4 +1,4 @@
-import { Navbar, Dropdown, Avatar, Text, Button } from '@nextui-org/react'
+import { Navbar, Dropdown, Avatar, Text, Button, Link } from '@nextui-org/react'
 import { useGlobalContext } from '@/context'
 import { useState } from 'react'
 import { logout } from '@/api'
@@ -35,7 +35,9 @@ export function Navigation({pages, enforceLogin, setUserState}) {
               Signed in as {context.username}
             </Dropdown.Item>
             <Dropdown.Item key="settings" withDivider>
-              Settings
+            <Link href="/admin/settings">
+                Settings
+            </Link>
             </Dropdown.Item>
             <Dropdown.Item key="logout" withDivider>
               <Button flat color="error" onPress={() => logout({context, setContext})}>Log Out</Button>
