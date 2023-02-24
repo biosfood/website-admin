@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 
 export function Navigation({pages, enforceLogin, setUserState}) {
   const {context, setContext} = useGlobalContext()
-  const [avatarSource, setAvatarSource ] = useState('')
   const router = useRouter()
 
   function CustomLink({ target, children}) {
@@ -27,7 +26,7 @@ export function Navigation({pages, enforceLogin, setUserState}) {
         <Dropdown placement="bottom-right">
           <Navbar.Item>
             <Dropdown.Trigger>
-              <Avatar bordered as="button" color="secondary" size="md" text={context.username} src={avatarSource}/>
+              <Avatar bordered as="button" color="secondary" size="md" text={context.username} src={context.profilePicture?.preview}/>
             </Dropdown.Trigger>
           </Navbar.Item>
           <Dropdown.Menu aria-label="User menu actions" color="secondary">

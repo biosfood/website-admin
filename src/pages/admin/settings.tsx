@@ -12,8 +12,7 @@ export default function Settings() {
       <Card>
         <Card.Header><Text h2>Profile picture</Text></Card.Header>
         <Card.Body><AssetPicker selection={context.profilePicture} 
-          onPick={asset => {setContext({...context, profilePicture: asset});
-          asset ? setProfilePicture(context, setContext, asset.id) : null}}/>
+          onPick={asset => setProfilePicture(context, setContext, asset)}/>
         </Card.Body>
       </Card>
     </Container>

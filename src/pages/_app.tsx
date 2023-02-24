@@ -5,7 +5,7 @@ import { ContextProvider, useGlobalContext } from '@/context'
 import { Navigation, user } from "@/navigation"
 import { useEffect } from 'react'
 import { useRouter } from "next/router";
-import { updateUserData } from '@/api'
+import { updateUserData, loadAssets } from '@/api'
 
 const theme = createTheme({type: "dark",})
 
@@ -30,8 +30,8 @@ export default function App({ Component, pageProps }: AppProps) {
   function MainPage( ) {
     const {context, setContext} = useGlobalContext()
     const router = useRouter()
-
-    useEffect(() => {
+    
+    const updateContext = () => {
       if (context.token == 'REMOVE_NOW') {
         localStorage.removeItem("token")
         setContext({...context, token: ''})
@@ -44,16 +44,18 @@ export default function App({ Component, pageProps }: AppProps) {
         })
         return
       }
+      setContext({...context, assets: []})
       if (!context.token && router.pathname.startsWith("/admin")) {
         router.push("/login")
       }
-    }, [context.token])
+    }
+    useEffect(updateContext, [context.token])
 
     useEffect(() => {
       setContext({...context, path: router.pathname})
     }, [router.pathname])
 
-    useEffect(() => setContext({...context, token: localStorage.getItem('token')}), [])
+    useEffect(() => setContext({...context, token: localStorage.getItem('token'), updateContext}), [])
 
     return (
       <>

@@ -28,13 +28,16 @@ export function login(context, setContext, email: string, password: string) {
 }
 
 export function updateUserData(context, setContext) {
-  return doGraphQl('query GetUserData($token: String) {userData(token: $token) {name, email}}', {token: context.token})
+  return doGraphQl('query GetUserData($token: String) {userData(token: $token) {name, email, profilePicture {id, name, preview}}}', {token: context.token})
   .then(response => {
     if (response?.data?.userData?.name) {
-      setContext({...context, username: response.data.userData.name, useremail: response.data.userData.email})
+      loadAssets(context).then(assets => {
+        setContext({...context, username: response.data.userData.name, useremail: response.data.userData.email,
+                 profilePicture: response.data.userData.profilePicture, assets})
+      })
       return true
     }
-    setContext({...context, token: '', username: '', useremail: ''})
+    setContext({...context, token: '', username: '', useremail: '', profilePicture: null})
     return false
   })
 }
@@ -63,8 +66,13 @@ export function logout({context, setContext}) {
   setContext({...context, username: '', useremail: '', token: 'REMOVE_NOW'})
 }
 
-export function setProfilePicture(context, setContext, id) {
-// TODO
+export function setProfilePicture(context, setContext, asset) {
+  const id = asset ? asset.id : 0
+  return doGraphQl('mutation SetProfilePicture($token: String, $id: Int){setProfilePicture(token: $token, id: $id)}',
+                   {token: context.token, id}).then(response => {
+                  if (response.data?.setProfilePicture)
+                    updateUserData(context, setContext) 
+                  })
 }
 
 export function retrieveAsset(context, id) {
