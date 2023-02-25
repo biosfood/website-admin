@@ -88,3 +88,10 @@ export function changePassword(context, newPassword) {
                     {token: context.token, newPassword: processPassword(newPassword)})
   .then(response => response.data?.changePassword)
 }
+
+export function changeEmail(context, newEmail) {
+  return doGraphQl('mutation ChangeEmail($token: String, $newEmail: String)'+
+                   '{changeEmail(token: $token, newEmail: $newEmail)}',
+                    {token: context.token, newEmail})
+  .then(response => response.data?.changeEmail)
+}

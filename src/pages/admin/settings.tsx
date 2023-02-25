@@ -1,7 +1,7 @@
 import {useGlobalContext} from '@/context'
 import { Card, Text, Container, Spacer, Button, Input} from '@nextui-org/react'
 import {AssetPicker} from '@/assetPicker'
-import {setProfilePicture, login, changePassword as doChangePassword} from '@/api'
+import {setProfilePicture, login, changePassword as doChangePassword, changeEmail as doChangeEmail} from '@/api'
 import { useEffect, useState, useRef } from 'react';
 
 function PasswordChange({context, setContext}) {
@@ -63,9 +63,50 @@ function PasswordChange({context, setContext}) {
         <Spacer y={1}/>
         <Text color="error">{errorMessage}</Text>
       </Card.Body>
-      <Card.Footer style={{display: "flex", justifyContent: "space-between"}}>
+      <Card.Footer style={{display: "flex", justifyContent: "space-around"}}>
         <Button light color="error" onPress={cancel}>Cancel</Button>
         <Button color="primary" onPress={changePassword}>Change Password</Button>
+      </Card.Footer>
+    </Card>
+  )
+}
+
+function EmailChange({context, setContext}) {
+  const inputRef = useRef()
+  const [errorMessage, setErrorMessage] = useState('')
+
+  function cancel() {
+    inputRef.current.value = ''
+  }
+
+  function changeEmail() {
+    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(inputRef.current.value)) {
+      setErrorMessage('please enter a vaild email address')
+      return
+    }
+    doChangeEmail(context, inputRef.current.value).then(success => {
+      if (success) {
+        cancel()
+        setErrorMessage('email change was successful')
+        return
+      }
+      setErrorMessage('something went wrong while changing your email')
+      return
+    })
+  }
+
+  return (
+    <Card>
+      <Card.Header><Text h2>Change E-mail, current address: {context.useremail}</Text></Card.Header>
+      <Card.Body>
+        <Input ref={inputRef} aria-label="new email address" bordered type="email" color="primary" size="xl"
+          placeholder="new email address" clearable/>
+        <Spacer y={1}/>
+        <Text color="error">{errorMessage}</Text>
+      </Card.Body>
+      <Card.Footer style={{display: "flex", justifyContent: "space-around"}}>
+        <Button light color="error" onPress={cancel}>Cancel</Button>
+        <Button color="primary" onPress={changeEmail}>Change E-mail</Button>
       </Card.Footer>
     </Card>
   )
@@ -77,6 +118,8 @@ export default function Settings() {
   return (
     <Container>
       <Text h1>Settings</Text>
+      <EmailChange context={context} setContext={setContext}/>
+      <Spacer y={1}/>
       <PasswordChange context={context} setContext={setContext}/>
       <Spacer y={1}/>
       <Card>
@@ -85,6 +128,7 @@ export default function Settings() {
           onPick={asset => setProfilePicture(context, setContext, asset)}/>
         </Card.Body>
       </Card>
+      <Spacer y={1}/>
     </Container>
   )
 }
