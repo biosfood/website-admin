@@ -34,7 +34,8 @@ export function AssetPicker({selection, onPick}) {
               <Dropdown.Item key="0">No profile picture</Dropdown.Item>
             </Dropdown.Section>
             <Dropdown.Section>
-              {context.assets.map(asset => (<Dropdown.Item key={asset.id}>{asset.name}</Dropdown.Item>))}
+              {context.assets.map(asset => (<Dropdown.Item key={asset.id} icon={
+                <Image src={asset.preview} width={24}/>}>{asset.name}</Dropdown.Item>))}
             </Dropdown.Section>
           </Dropdown.Menu>
         </Dropdown>
