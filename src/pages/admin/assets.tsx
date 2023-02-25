@@ -43,11 +43,8 @@ export default function Assets() {
           setImageSource(canvas.toDataURL('image/jpeg', 0.5))
         }
       }
-      reader.onError = error => console.log(error)
       function endUpload() {
-        console.log(filesToProcess)
         setFiles(filesToProcess.slice(1, filesToProcess.length + 1))
-        console.log(filesToProcess)
       }
 
       function upload() {

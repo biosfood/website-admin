@@ -18,11 +18,13 @@ function processPassword(password: string) {
   return "MD5-" + hash.digest("base64") // ;)
 }
 
-export function login(context, setContext, email: string, password: string) {
+export function login(context, setContext, email: string, password: string, updateContext = true) {
   return doGraphQl(
     `mutation Login($email: String, $password: String) {login(email: $email, password: $password)}`,
     {email, password: processPassword(password)}).then(response => {
-      setContext({...context, token: response.data.login})
+      if (response.data.login || updateContext) {
+        setContext({...context, token: response.data.login})
+      }
       return response
     })
 }
@@ -78,4 +80,11 @@ export function setProfilePicture(context, setContext, asset) {
 export function retrieveAsset(context, id) {
   return doGraphQl('query GetAsset($token: String, $id: Int) {resource(token: $token, id: $id) {content}}', {token: context.token, id})
   .then(response => response.data?.resource?.content)
+}
+
+export function changePassword(context, newPassword) {
+  return doGraphQl('mutation ChangePassword($token: String, $newPassword: String)'+
+                   '{changePassword(token: $token, newPassword: $newPassword)}',
+                    {token: context.token, newPassword: processPassword(newPassword)})
+  .then(response => response.data?.changePassword)
 }
