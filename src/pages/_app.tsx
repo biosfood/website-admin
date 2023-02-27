@@ -6,6 +6,7 @@ import { Navigation, user } from "@/navigation"
 import { useEffect } from 'react'
 import { useRouter } from "next/router";
 import { updateUserData, loadAssets } from '@/api'
+import { Footer } from '@/footer'
 
 const theme = createTheme({type: "dark",})
 
@@ -58,12 +59,16 @@ export default function App({ Component, pageProps }: AppProps) {
     useEffect(() => setContext({...context, token: localStorage.getItem('token'), updateContext}), [])
 
     return (
-      <>
-        <Navigation pages={adminPages} />
-        <Component {...pageProps} />
-      </>
+      <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '100vh'}}>
+        <div>
+          <Navigation pages={adminPages} />
+          <Component {...pageProps} />
+        </div>
+        <Footer/>
+      </div>
     )
   }
+
   return ( 
     <SSRProvider>
       <NextUIProvider theme={theme}>
