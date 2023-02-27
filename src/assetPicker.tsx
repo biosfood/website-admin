@@ -25,7 +25,7 @@ export function AssetPicker({selection, onPick}) {
     <Grid.Container>
       <Grid xs>
         <Dropdown>
-          <Dropdown.Button defaultSelectedKeys={[`${selection ? selection.id : '0'}`]} flat color="secondary">
+          <Dropdown.Button defaultselectedkeys={[`${selection ? selection.id : '0'}`]} flat color="secondary">
             {selection ? selection.name : "Choose profile picture"}
           </Dropdown.Button>
           <Dropdown.Menu color="secondary" aria-label="choose profile picture" selectionMode="single"
