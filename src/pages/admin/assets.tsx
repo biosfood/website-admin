@@ -5,6 +5,7 @@ import { useEffect, useState, useRef } from 'react';
 import { FileDropZone } from '@/fileDropZone'
 import { Delete } from 'react-iconly'
 import {useGlobalContext} from '@/context'
+import Head from 'next/head'
 
 export default function Assets() {
   const [assets, setAssets] = useState(new Array())
@@ -74,6 +75,9 @@ export default function Assets() {
 
   return (
     <>
+      <Head>
+        <title>Assets</title>
+      </Head>
       <Grid.Container gap={2} justify="center">
         <Grid md id={"FILE"}>
           <File style={{width: '100%'}}/>

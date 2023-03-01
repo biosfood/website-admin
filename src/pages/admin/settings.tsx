@@ -3,6 +3,7 @@ import { Card, Text, Container, Spacer, Button, Input} from '@nextui-org/react'
 import {AssetPicker} from '@/assetPicker'
 import {setProfilePicture, login, changePassword as doChangePassword, changeEmail as doChangeEmail} from '@/api'
 import { useEffect, useState, useRef } from 'react';
+import Head from 'next/head'
 
 function PasswordChange({context, setContext}) {
   const [errorMessage, setErrorMessage] = useState('')
@@ -49,6 +50,10 @@ function PasswordChange({context, setContext}) {
   }
 
   return (
+    <>
+    <Head>
+      <title>Settings</title>
+    </Head>
     <Card>
       <Card.Header><Text h2>Change password</Text></Card.Header>
       <Card.Body>
@@ -68,6 +73,7 @@ function PasswordChange({context, setContext}) {
         <Button color="primary" onPress={changePassword}>Change Password</Button>
       </Card.Footer>
     </Card>
+    </>
   )
 }
 
