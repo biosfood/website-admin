@@ -7,7 +7,7 @@ const defaultContext = {
   path: '',
   token: '???',
   profilePicture: null,
-  assets: [],
+  resources: [],
 }
 
 const GlobalContext = createContext(defaultContext)

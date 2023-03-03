@@ -12,7 +12,7 @@ export function AssetPicker({selection, onPick}) {
 
   function pick([selection]) {
     const id = parseInt(selection)
-    const asset = context.assets.find(asset => asset.id == id)
+    const asset = context.resources.find(asset => asset.id == id)
     asset ? onPick(asset) : onPick(null)
   }
 
@@ -34,7 +34,7 @@ export function AssetPicker({selection, onPick}) {
               <Dropdown.Item key="0">No profile picture</Dropdown.Item>
             </Dropdown.Section>
             <Dropdown.Section>
-              {context.assets.map(asset => (<Dropdown.Item key={asset.id} icon={
+              {context.resources.filter(it => it.resourceType == 'image').map(asset => (<Dropdown.Item key={asset.id} icon={
                 <Image src={asset.preview} width={24}/>}>{asset.name}</Dropdown.Item>))}
             </Dropdown.Section>
           </Dropdown.Menu>

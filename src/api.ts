@@ -30,13 +30,15 @@ export function login(context, setContext, email: string, password: string, upda
 }
 
 export function updateUserData(context, setContext) {
-  return doGraphQl('query GetUserData($token: String) {userData(token: $token) {name, email, profilePicture {id, name, preview}}}', {token: context.token})
+  return doGraphQl('query GetUserData($token: String) {userData(token: $token) '+
+                   '{name, email, profilePicture {id, name, preview}, resources {id, name, preview, resourceType}}}', {token: context.token})
   .then(response => {
     if (response?.data?.userData?.name) {
-      loadAssets(context).then(assets => {
-        setContext({...context, username: response.data.userData.name, useremail: response.data.userData.email,
-                 profilePicture: response.data.userData.profilePicture, assets})
-      })
+      setContext({...context,
+                 username: response.data.userData.name,
+                 useremail: response.data.userData.email,
+                 profilePicture: response.data.userData.profilePicture,
+                 resources: response.data.userData.resources})
       return true
     }
     setContext({...context, token: '', username: '', useremail: '', profilePicture: null})
@@ -44,18 +46,14 @@ export function updateUserData(context, setContext) {
   })
 }
 
-export function loadAssets(context) {
-  return doGraphQl('query GetAssets($token: String) {resources(token: $token) {id, name, preview}}', {token: context.token})
-  .then(response => {
-    return response.data.resources
-  })
+export function createResource(context, type, name, preview, content) {
+  return doGraphQl('mutation CreateResource($token: String, $type: String, $name: String, $preview: String, $content: String)'+
+                   '{createResource(token: $token, type: $type, name: $name, preview: $preview, content: $content) {id} }',
+                  {token: context.token, name, type, preview, content})
 }
 
 export function createAsset(context, name, preview, content) {
-  return doGraphQl('mutation CreateResource($token: String, $name: String, $preview: String, $content: String)'+
-                   '{createResource(token: $token, name: $name, preview: $preview, content: $content) {id} }',
-                  {token: context.token, name, preview, content})
-  .then(response => response.data.createResource)
+  return createResource(context, 'image', name, preview, content)
 }
 
 export function deleteResource(context, id) {

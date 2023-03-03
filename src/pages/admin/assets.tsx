@@ -1,6 +1,6 @@
 import { Navigation } from '@/navigation'
 import { Grid, Card, Row, Button, Text, Image as NextImage, Input, Spacer } from '@nextui-org/react';
-import { loadAssets, createAsset, deleteResource } from '@/api'
+import { loadAssets, createAsset, deleteResource, updateUserData } from '@/api'
 import { useEffect, useState, useRef } from 'react';
 import { FileDropZone } from '@/fileDropZone'
 import { Delete } from 'react-iconly'
@@ -8,16 +8,7 @@ import {useGlobalContext} from '@/context'
 import Head from 'next/head'
 
 export default function Assets() {
-  const [assets, setAssets] = useState(new Array())
   const {context, setContext} = useGlobalContext()
-  const updateAssets = () => {
-    loadAssets(context).then(newAssets => {
-      if (newAssets) {
-        setAssets(newAssets)
-      }
-    })
-  }
-  useEffect(updateAssets, [context.token])
   
   const [filesToProcess, setFiles] = useState(new Array())
   function onFileDrop(file) {
@@ -49,9 +40,10 @@ export default function Assets() {
       }
 
       function upload() {
-        createAsset(context, titleRef.current.value, imageSource, reader.result)
-        updateAssets()
-        endUpload()
+        createAsset(context, titleRef.current.value, imageSource, reader.result).then(() => {
+          updateUserData(context, setContext)
+          endUpload()
+        })
       }
 
       return (
@@ -82,15 +74,14 @@ export default function Assets() {
         <Grid md id={"FILE"}>
           <File style={{width: '100%'}}/>
         </Grid>
-        {assets.map((asset) => (
-            <Grid md id={"ASSET-"+asset.id} style={{width: '100%'}}>
+        {context.resources.filter(resource => resource.resourceType == 'image').map((asset) => (
+            <Grid md key={"ASSET-"+asset.id} style={{width: '100%'}}>
               <Card>
                 <Card.Header style={{display: 'flex', justifyContent: 'space-between'}}>
                   <Text h3>{asset.name}</Text>
-                  <Button auto color="error" icon={<Delete />} onPress={async () => {
-                    await deleteResource(context, asset.id);
-                    updateAssets();
-                    }}/>
+                  <Button auto color="error" icon={<Delete />} onPress={() => {
+                    deleteResource(context, asset.id).then(() => updateUserData(context, setContext))
+                  }}/>
                 </Card.Header>
                 <Card.Body>
                   <NextImage src={asset.preview} width={128} height={128} css={{scale: 2}}/>

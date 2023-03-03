@@ -45,7 +45,6 @@ export default function App({ Component, pageProps }: AppProps) {
         })
         return
       }
-      setContext({...context, assets: []})
       if (!context.token && router.pathname.startsWith("/admin")) {
         router.push("/login")
       }
