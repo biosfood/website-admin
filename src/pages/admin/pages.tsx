@@ -2,13 +2,21 @@ import {useGlobalContext} from '@/context'
 import { Container, Text, Card } from '@nextui-org/react';
 import Head from 'next/head'
 
-function Page({allPages, pageDirectory}) {
-  const children = allPages.filter(resource => resource.title.startsWith(pageDirectory))
+function getNextName(title, directory) {
+  const remainder = title.substring(directory.length)
+  return remainder.split('/')[0]
+}
+
+function Page({context, pageDirectory}) {
+  const children = [...new Set(context.resources.filter(resource => resource.name.startsWith(pageDirectory) && resource.name.length > pageDirectory.length)
+                               .map(resource => getNextName(resource.name, pageDirectory)))]
+  const page = context.resources.find(resource => resource.name == pageDirectory)
   return (
   <Card>
     <Card.Header><Text h2>{pageDirectory}</Text></Card.Header>
     <Card.Body>
-      content: todo
+      {page?.preview}
+      {children.map(child => (<Page context={context} pageDirectory={pageDirectory + pageDirectory == '/' ? '' : '/' + child}/>))}
     </Card.Body>
   </Card>)
 }
@@ -17,12 +25,12 @@ export default function Pages() {
   const {context, setContext} = useGlobalContext()
 
   return (
-    <Container>
+    <Container style={{marginBottom: '10px'}}>
       <Head>
         <title>Pages</title>
       </Head>
       <Text h1>Pages overview</Text>
-      <Page allPages={context.resources.filter(resource => resource.resourceType == 'article')} pageDirectory='/' />
+      <Page context={context} pageDirectory='/' />
     </Container>
   )
 }
