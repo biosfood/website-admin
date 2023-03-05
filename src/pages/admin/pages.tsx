@@ -4,7 +4,8 @@ import Head from 'next/head'
 
 function getNextName(title, directory) {
   const remainder = title.substring(directory.length)
-  return remainder.split('/')[0]
+  const parts = remainder.split('/')
+  return parts[0]? parts[0] : parts[1]
 }
 
 function Page({context, pageDirectory}) {
@@ -16,7 +17,7 @@ function Page({context, pageDirectory}) {
     <Card.Header><Text h2>{pageDirectory}</Text></Card.Header>
     <Card.Body>
       {page?.preview}
-      {children.map(child => (<Page context={context} pageDirectory={pageDirectory + pageDirectory == '/' ? '' : '/' + child}/>))}
+      {children.map(child => (<Page context={context} pageDirectory={pageDirectory + (pageDirectory == '/' ? '' : '/') + child}/>))}
     </Card.Body>
   </Card>)
 }
