@@ -56,6 +56,11 @@ export function createAsset(context, name, preview, content) {
   return createResource(context, 'image', name, preview, content)
 }
 
+export function createArticle(context, name, preview, content) {
+  return createResource(context, 'article', name, preview, content)
+}
+
+
 export function deleteResource(context, id) {
   return doGraphQl('mutation DeleteResource($token: String, $id: Int)'+
                    '{deleteResource(token: $token, id: $id) }',

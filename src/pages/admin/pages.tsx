@@ -1,8 +1,9 @@
 import {useGlobalContext} from '@/context'
-import { Container, Text, Card, Button, Modal } from '@nextui-org/react';
+import { Container, Text, Card, Button, Modal, Input } from '@nextui-org/react';
 import Head from 'next/head'
 import { PaperPlus } from 'react-iconly'
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react'
+import { updateUserData, createArticle } from '@/api'
 
 function getNextName(title, directory) {
   const remainder = title.substring(directory.length)
@@ -10,17 +11,33 @@ function getNextName(title, directory) {
   return parts[0]? parts[0] : parts[1]
 }
 
+function CustomInput({value, setValue, placeholder}) {
+  return (
+    <Input value={value} onChange={e => {setValue(e.target.value)}} aria-label={placeholder} placeholder={placeholder}/>
+  )
+}
 
 export default function Pages() {
   const {context, setContext} = useGlobalContext()
   const [modalOpen, setModalOpen] = useState(false)
+  const [newName, setNewName] = useState('')
+  const [error, setError] = useState('')
   
   function createPage(directory) {
+    setNewName(directory)
     setModalOpen(true)
   }
 
   function finishCreatePage() {
-    setModalOpen(false)
+    if (newName[newName.length-1] == '/') {
+      return setError("Please don't end a page name with a \"/\"")
+    }
+    if (context.resources.find(resource => resource.name == newName)) {
+      return setError("A resource with that name already exists...")
+    }
+    createArticle(context, newName, `preview for ${newName}`, '<Content>').then(() => {
+      updateUserData(context, setContext).then(() => setModalOpen(false))
+    })
   }
 
   function Page({pageDirectory}) {
@@ -40,13 +57,17 @@ export default function Pages() {
     </Card>)
   }
 
-
   return (
     <Container style={{marginBottom: '10px'}}>
       <Modal closeButton blur open={modalOpen} onClose={() => setModalOpen(false)}>
         <Modal.Header>
           <Text h3>Create a new page</Text>
         </Modal.Header>
+        <Modal.Body>
+          <Text>New page path:</Text>
+          <CustomInput value={newName} setValue={newName => {if (newName) {setNewName(newName)}}} placeholder="/"/>
+          <Text color="error">{error}</Text>
+        </Modal.Body>
         <Modal.Footer style={{display: "flex", justifyContent: "space-between"}}>
           <Button color="error" auto onPress={() => setModalOpen(false)}>Cancel</Button>
           <Button color="primary" auto onPress={finishCreatePage}>Create Page</Button>
