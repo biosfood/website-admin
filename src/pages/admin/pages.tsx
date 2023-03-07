@@ -1,9 +1,9 @@
 import {useGlobalContext} from '@/context'
 import { Container, Text, Card, Button, Modal, Input } from '@nextui-org/react';
 import Head from 'next/head'
-import { PaperPlus } from 'react-iconly'
+import { PaperPlus, Delete } from 'react-iconly'
 import { useEffect, useState, useRef } from 'react'
-import { updateUserData, createArticle } from '@/api'
+import { updateUserData, createArticle, deleteResource } from '@/api'
 
 function getNextName(title, directory) {
   const remainder = title.substring(directory.length)
@@ -46,7 +46,12 @@ export default function Pages() {
     const page = context.resources.find(resource => resource.name == pageDirectory)
     return (
     <Card>
-      <Card.Header><Text h2>{pageDirectory}</Text></Card.Header>
+      <Card.Header style={{display: "flex", justifyContent: "space-between"}}>
+        <Text h2>{pageDirectory}</Text>
+        {page ? <Button auto color="error" icon={<Delete />} onPress={() => {
+            deleteResource(context, page.id).then(() => updateUserData(context, setContext))
+        }}/>: null}
+      </Card.Header>
       <Card.Body>
         {page?.preview}
         <Container style={{display: 'flex', justifyContent: 'space-around'}}>
