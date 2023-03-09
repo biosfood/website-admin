@@ -11,18 +11,35 @@ function getNextName(title, directory) {
   return parts[0]? parts[0] : parts[1]
 }
 
-export default function Pages() {
-  const {context, setContext} = useGlobalContext()
+function createPageTemplate(context, setContext) {
   const [modalOpen, setModalOpen] = useState(false)
-  const newName = useRef()
-  const [error, setError] = useState('')
   const [startNewName, setStartNewName] = useState('')
-  
+  const [error, setError] = useState('')
+  const newName = useRef()
+
+  const modal = (
+    <Modal closeButton blur open={modalOpen} onClose={() => setModalOpen(false)}
+      onOpen={() => setTimeout(() => newName.current.value = startNewName,  0)}>
+      <Modal.Header>
+        <Text h3>Create a new page</Text>
+      </Modal.Header>
+      <Modal.Body>
+        <Text>New page path:</Text>
+        <Input ref={newName} aria-label="new page name" placeholder="new page name"/>
+        <Text color="error">{error}</Text>
+      </Modal.Body>
+      <Modal.Footer style={{display: "flex", justifyContent: "space-between"}}>
+        <Button color="error" auto onPress={() => setModalOpen(false)}>Cancel</Button>
+        <Button color="primary" auto onPress={finishCreatePage}>Create Page</Button>
+      </Modal.Footer>
+    </Modal>
+  )
+
   function createPage(directory) {
     setStartNewName(directory)
     setModalOpen(true)
   }
-
+  
   function finishCreatePage() {
     const filename = newName.current.value
     if (!filename) {
@@ -42,11 +59,14 @@ export default function Pages() {
     })
   }
 
-  function Page({pageDirectory}) {
-    const children = [...new Set(context.resources.filter(resource => resource.name.startsWith(pageDirectory) && resource.name.length > pageDirectory.length)
-                               .map(resource => getNextName(resource.name, pageDirectory)))]
-    const page = context.resources.find(resource => resource.name == pageDirectory)
-    return (
+  return [modal, createPage]
+}
+
+function Page({pageDirectory, context, setContext, createPage}) {
+  const children = [...new Set(context.resources.filter(resource => resource.name.startsWith(pageDirectory) && resource.name.length > pageDirectory.length)
+                             .map(resource => getNextName(resource.name, pageDirectory)))]
+  const page = context.resources.find(resource => resource.name == pageDirectory)
+  return (
     <Card>
       <Card.Header style={{display: "flex", justifyContent: "space-between"}}>
         <Text h2>{pageDirectory}</Text>
@@ -59,33 +79,26 @@ export default function Pages() {
         <Container style={{display: 'flex', justifyContent: 'space-around'}}>
           <Button auto color="success" icon={(<PaperPlus/>)} onPress={() => createPage(pageDirectory)}/>
         </Container>
-        {children.map(child => (<Page pageDirectory={pageDirectory + (pageDirectory == '/' ? '' : '/') + child}/>))}
+        {children.map(child => (<Page pageDirectory={pageDirectory + (pageDirectory == '/' ? '' : '/') + child}
+          context={context} setContext={setContext} createPage={createPage}/>))}
       </Card.Body>
-    </Card>)
-  }
+    </Card>
+  )
+}
+
+
+export default function Pages() {
+  const {context, setContext} = useGlobalContext()
+  const [newPageModal, createPage] = createPageTemplate(context, setContext)
 
   return (
     <Container style={{marginBottom: '10px'}}>
-      <Modal closeButton blur open={modalOpen} onClose={() => setModalOpen(false)}
-        onOpen={() => setTimeout(() => newName.current.value = startNewName,  0)}>
-        <Modal.Header>
-          <Text h3>Create a new page</Text>
-        </Modal.Header>
-        <Modal.Body>
-          <Text>New page path:</Text>
-          <Input ref={newName} aria-label="new page name" placeholder="new page name"/>
-          <Text color="error">{error}</Text>
-        </Modal.Body>
-        <Modal.Footer style={{display: "flex", justifyContent: "space-between"}}>
-          <Button color="error" auto onPress={() => setModalOpen(false)}>Cancel</Button>
-          <Button color="primary" auto onPress={finishCreatePage}>Create Page</Button>
-        </Modal.Footer>
-      </Modal>
+      {newPageModal}
       <Head>
         <title>Pages</title>
       </Head>
       <Text h1>Pages overview</Text>
-      <Page pageDirectory='/' />
+      <Page pageDirectory='/' context={context} setContext={setContext} createPage={createPage}/>
     </Container>
   )
 }
