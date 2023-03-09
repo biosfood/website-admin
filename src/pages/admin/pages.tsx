@@ -1,7 +1,7 @@
 import {useGlobalContext} from '@/context'
 import { Container, Text, Card, Button, Modal, Input } from '@nextui-org/react';
 import Head from 'next/head'
-import { PaperPlus, Delete } from 'react-iconly'
+import { PaperPlus, Delete, Edit } from 'react-iconly'
 import { useEffect, useState, useRef } from 'react'
 import { updateUserData, createArticle, deleteResource } from '@/api'
 
@@ -62,7 +62,41 @@ function createPageTemplate(context, setContext) {
   return [modal, createPage]
 }
 
-function Page({pageDirectory, context, setContext, createPage}) {
+
+function editPageTemplate(context, setContext) {
+  const [modalOpen, setModalOpen] = useState(false)
+  const [error, setError] = useState('')
+  const [pageToEdit, setPageToEdit] = useState({})
+
+  const modal = (
+    <Modal closeButton blur open={modalOpen} onClose={() => setModalOpen(false)}
+      onOpen={() => setTimeout(() => {}, 0)}>
+      <Modal.Header>
+        <Text h3>Edit page</Text>
+      </Modal.Header>
+      <Modal.Body>
+        <Text>Title:</Text>
+        <Text color="error">{error}</Text>
+      </Modal.Body>
+      <Modal.Footer style={{display: "flex", justifyContent: "space-between"}}>
+        <Button color="error" auto onPress={() => setModalOpen(false)}>Cancel</Button>
+        <Button color="primary" auto onPress={finishEditPage}>Create Page</Button>
+      </Modal.Footer>
+    </Modal>
+  )
+
+  function editPage(page) {
+    setPageToEdit(page)
+    setModalOpen(true)
+  }
+  
+  function finishEditPage() {
+  }
+
+  return [modal, editPage]
+}
+
+function Page({pageDirectory, context, setContext, createPage, editPage}) {
   const children = [...new Set(context.resources.filter(resource => resource.name.startsWith(pageDirectory) && resource.name.length > pageDirectory.length)
                              .map(resource => getNextName(resource.name, pageDirectory)))]
   const page = context.resources.find(resource => resource.name == pageDirectory)
@@ -70,9 +104,11 @@ function Page({pageDirectory, context, setContext, createPage}) {
     <Card>
       <Card.Header style={{display: "flex", justifyContent: "space-between"}}>
         <Text h2>{pageDirectory}</Text>
-        {page ? <Button auto color="error" icon={<Delete />} onPress={() => {
-            deleteResource(context, page.id).then(() => updateUserData(context, setContext))
-        }}/>: null}
+        {page ? <div style={{display: "flex", flexDirection: "horizontal", gap: '1em'}}>
+          <Button auto color="error" icon={<Delete />} onPress={() => {
+            deleteResource(context, page.id).then(() => updateUserData(context, setContext))}}/>
+          <Button auto color="primary" icon={<Edit />} onPress={() => editPage(context, page)}/>
+        </div>: null}
       </Card.Header>
       <Card.Body>
         {page?.preview}
@@ -80,7 +116,7 @@ function Page({pageDirectory, context, setContext, createPage}) {
           <Button auto color="success" icon={(<PaperPlus/>)} onPress={() => createPage(pageDirectory)}/>
         </Container>
         {children.map(child => (<Page pageDirectory={pageDirectory + (pageDirectory == '/' ? '' : '/') + child}
-          context={context} setContext={setContext} createPage={createPage}/>))}
+          context={context} setContext={setContext} createPage={createPage} editPage={editPage}/>))}
       </Card.Body>
     </Card>
   )
@@ -90,15 +126,17 @@ function Page({pageDirectory, context, setContext, createPage}) {
 export default function Pages() {
   const {context, setContext} = useGlobalContext()
   const [newPageModal, createPage] = createPageTemplate(context, setContext)
+  const [editPageModal, editPage] = editPageTemplate(context, setContext)
 
   return (
     <Container style={{marginBottom: '10px'}}>
       {newPageModal}
+      {editPageModal}
       <Head>
         <title>Pages</title>
       </Head>
       <Text h1>Pages overview</Text>
-      <Page pageDirectory='/' context={context} setContext={setContext} createPage={createPage}/>
+      <Page pageDirectory='/' context={context} setContext={setContext} createPage={createPage} editPage={editPage}/>
     </Container>
   )
 }
