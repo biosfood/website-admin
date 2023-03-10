@@ -18,7 +18,7 @@ export function AssetPicker({selection, onPick}) {
 
   useEffect(() => {
     selection ?
-      retrieveAsset(context, selection.id).then(asset => setCurrentAsset(asset)) : 
+      retrieveAsset(context, selection.id).then(asset => setCurrentAsset(asset.content)) : 
       setCurrentAsset("")}, [selection])
   
   return (

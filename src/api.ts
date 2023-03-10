@@ -81,9 +81,9 @@ export function setProfilePicture(context, setContext, asset) {
 }
 
 export function retrieveAsset(context, id) {
-  return doGraphQl('query GetAsset($token: String, $id: Int) {resource(token: $token, id: $id) {content}}',
+  return doGraphQl('query GetAsset($token: String, $id: Int) {resource(token: $token, id: $id) {content, preview}}',
                    {token: context.token, id})
-  .then(response => response.data?.resource?.content)
+  .then(response => response.data?.resource)
 }
 
 export function changePassword(context, newPassword) {
@@ -98,4 +98,14 @@ export function changeEmail(context, newEmail) {
                    '{changeEmail(token: $token, newEmail: $newEmail)}',
                     {token: context.token, newEmail})
   .then(response => response.data?.changeEmail)
+}
+
+export function updateResource(context, setContext, id, preview, content) {
+  return doGraphQl('mutation UpdateResource($token: String, $id: Int, $preview: String, $content: String)'+
+                   '{updateResource(token: $token, id: $id, preview: $preview, content: $content)}',
+                    {token: context.token, id, preview, content})
+  .then(response => {
+    updateUserData(context, setContext)
+    return response?.data?.updateResource
+  })
 }

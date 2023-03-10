@@ -1,9 +1,9 @@
 import {useGlobalContext} from '@/context'
-import { Container, Text, Card, Button, Modal, Input } from '@nextui-org/react';
+import { Container, Text, Card, Button, Modal, Input, Textarea } from '@nextui-org/react';
 import Head from 'next/head'
 import { PaperPlus, Delete, Edit } from 'react-iconly'
 import { useEffect, useState, useRef } from 'react'
-import { updateUserData, createArticle, deleteResource } from '@/api'
+import { updateUserData, createArticle, deleteResource, retrieveAsset, updateResource } from '@/api'
 
 function getNextName(title, directory) {
   const remainder = title.substring(directory.length)
@@ -67,20 +67,26 @@ function editPageTemplate(context, setContext) {
   const [modalOpen, setModalOpen] = useState(false)
   const [error, setError] = useState('')
   const [pageToEdit, setPageToEdit] = useState({})
+  // TODO: change title
+  const preview = useRef()
+  const content = useRef()
 
   const modal = (
     <Modal closeButton blur open={modalOpen} onClose={() => setModalOpen(false)}
-      onOpen={() => setTimeout(() => {}, 0)}>
+      onOpen={() => setTimeout(() => {}, 0)} width="50em">
       <Modal.Header>
         <Text h3>Edit page</Text>
       </Modal.Header>
       <Modal.Body>
-        <Text>Title:</Text>
+        <Text>Preview:</Text>
+        <Input ref={preview} aria-label="page preview" placeholder="page preview"/>
+        <Text>Content:</Text>
+        <Textarea placeholder="Page content:" placeholder="content" ref={content}/>
         <Text color="error">{error}</Text>
       </Modal.Body>
       <Modal.Footer style={{display: "flex", justifyContent: "space-between"}}>
         <Button color="error" auto onPress={() => setModalOpen(false)}>Cancel</Button>
-        <Button color="primary" auto onPress={finishEditPage}>Create Page</Button>
+        <Button color="primary" auto onPress={finishEditPage}>Save Changes</Button>
       </Modal.Footer>
     </Modal>
   )
@@ -88,9 +94,20 @@ function editPageTemplate(context, setContext) {
   function editPage(page) {
     setPageToEdit(page)
     setModalOpen(true)
+    console.log(page)
+    retrieveAsset(context, page.id).then(resource => {
+      if (!resource) {
+        return setModalOpen(false)
+      }
+      console.log(resource)
+      preview.current.value = resource.preview
+      content.current.value = resource.content
+    })
   }
   
   function finishEditPage() {
+    updateResource(context, setContext, pageToEdit.id, preview.current.value, content.current.value)
+    .then(() =>setModalOpen(false))
   }
 
   return [modal, editPage]
@@ -107,7 +124,7 @@ function Page({pageDirectory, context, setContext, createPage, editPage}) {
         {page ? <div style={{display: "flex", flexDirection: "horizontal", gap: '1em'}}>
           <Button auto color="error" icon={<Delete />} onPress={() => {
             deleteResource(context, page.id).then(() => updateUserData(context, setContext))}}/>
-          <Button auto color="primary" icon={<Edit />} onPress={() => editPage(context, page)}/>
+          <Button auto color="primary" icon={<Edit />} onPress={() => editPage(page)}/>
         </div>: null}
       </Card.Header>
       <Card.Body>
