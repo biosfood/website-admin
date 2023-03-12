@@ -1,5 +1,5 @@
 import {useGlobalContext} from '@/context'
-import { Container, Text, Card, Button, Modal, Input, Textarea } from '@nextui-org/react';
+import { Container, Text, Card, Button, Modal, Input, Textarea, Navbar } from '@nextui-org/react';
 import Head from 'next/head'
 import { PaperPlus, Delete, Edit } from 'react-iconly'
 import { useEffect, useState, useRef } from 'react'
@@ -62,6 +62,9 @@ function createPageTemplate(context, setContext) {
   return [modal, createPage]
 }
 
+function RenderPage({content}) {
+  return (<Text>{content}</Text>)
+}
 
 function editPageTemplate(context, setContext) {
   const [modalOpen, setModalOpen] = useState(false)
@@ -70,19 +73,30 @@ function editPageTemplate(context, setContext) {
   // TODO: change title
   const preview = useRef()
   const content = useRef()
+  const [mode, setMode] = useState('edit')
 
   const modal = (
     <Modal closeButton blur open={modalOpen} onClose={() => setModalOpen(false)}
       onOpen={() => setTimeout(() => {}, 0)} width="50em">
       <Modal.Header>
-        <Text h3>Edit page</Text>
+        <Navbar isCompact css={{$$navbarBackgroundColor: "transparent", $$navbarBlurBackgroundColor: "transparent"}}>
+          <Navbar.Content>
+            <Navbar.Link isActive={mode == "edit"} onPress={() => setMode('edit')}>Edit</Navbar.Link>
+            <Navbar.Link isActive={mode == "view"} onPress={() => setMode('view')}>View</Navbar.Link>
+          </Navbar.Content>
+        </Navbar>
       </Modal.Header>
       <Modal.Body>
-        <Text>Preview:</Text>
-        <Input ref={preview} aria-label="page preview" placeholder="page preview"/>
-        <Text>Content:</Text>
-        <Textarea placeholder="Page content:" placeholder="content" ref={content}/>
-        <Text color="error">{error}</Text>
+        <div style={{display: mode=='edit' ? '' : 'none'}}>
+          <Text>Preview:</Text>
+          <Input ref={preview} aria-label="page preview" placeholder="page preview"/>
+          <Text>Content:</Text>
+          <Textarea placeholder="Page content:" placeholder="content" ref={content}/>
+          <Text color="error">{error}</Text>
+        </div>
+        <div style={{display: mode=='view' ? '' : 'none'}}>
+          <RenderPage content={content.current?.value}/>
+        </div>
       </Modal.Body>
       <Modal.Footer style={{display: "flex", justifyContent: "space-between"}}>
         <Button color="error" auto onPress={() => setModalOpen(false)}>Cancel</Button>
