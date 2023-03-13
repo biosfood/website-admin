@@ -36,6 +36,7 @@ function createPageTemplate(context, setContext) {
   )
 
   function createPage(directory) {
+    setError('')
     setStartNewName(directory)
     setModalOpen(true)
   }
@@ -45,14 +46,14 @@ function createPageTemplate(context, setContext) {
     if (!filename) {
       return setError("Please enter a path for your new page")
     }
+    if (context.resources.find(resource => resource.name == filename)) {
+      return setError("A resource with that name already exists...")
+    }
     if (filename[0] != '/') {
       return setError("Please have your path start with a \"/\"")
     }
-    if (filename[newName.length-1] == '/') {
+    if (filename.length > 1 && filename[newName.length-1] == '/') {
       return setError("Please don't end a page name with a \"/\"")
-    }
-    if (context.resources.find(resource => resource.name == filename)) {
-      return setError("A resource with that name already exists...")
     }
     createArticle(context, filename, `preview for ${filename}`, '<Content>').then(() => {
       updateUserData(context, setContext).then(() => setModalOpen(false))
