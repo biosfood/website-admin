@@ -1,5 +1,5 @@
 import {useGlobalContext} from '@/context'
-import { Container, Text, Card, Button, Modal, Input, Textarea, Navbar } from '@nextui-org/react';
+import { Container, Text, Card, Button, Modal, Input, Textarea, Navbar, Spacer } from '@nextui-org/react';
 import Head from 'next/head'
 import { PaperPlus, Delete, Edit } from 'react-iconly'
 import { useEffect, useState, useRef } from 'react'
@@ -133,7 +133,8 @@ function Page({pageDirectory, context, setContext, createPage, editPage}) {
                              .map(resource => getNextName(resource.name, pageDirectory)))]
   const page = context.resources.find(resource => resource.name == pageDirectory)
   return (
-    <Card>
+    <Card variant="bordered" style={{marginTop: '1em', background: 
+        (pageDirectory.slice(0, -1).match(/\//g)|| []).length % 2 ? "var(--nextui-colors-background)" : ""}}>
       <Card.Header style={{display: "flex", justifyContent: "space-between"}}>
         <Text h2>{pageDirectory}</Text>
         {page ? <div style={{display: "flex", flexDirection: "horizontal", gap: '1em'}}>
