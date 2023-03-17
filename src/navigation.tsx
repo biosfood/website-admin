@@ -4,6 +4,7 @@ import { useState, useRef } from 'react'
 import { logout } from '@/api'
 import { useRouter } from "next/router";
 import Link from 'next/link'
+import {Logo} from '@/logo'
 
 export function Navigation({pages, enforceLogin, setUserState}) {
   const {context, setContext} = useGlobalContext()
@@ -26,6 +27,9 @@ export function Navigation({pages, enforceLogin, setUserState}) {
 
   return (
     <Navbar variant="floating" isBordered>
+      <Navbar.Brand>
+        <Logo/>
+      </Navbar.Brand>
       <Navbar.Content variant="highlight-rounded">
         {pages.map((page) => 
         <CustomLink target={page.target} key={page.target}>
