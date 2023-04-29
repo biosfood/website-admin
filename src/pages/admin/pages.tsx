@@ -4,6 +4,7 @@ import Head from 'next/head'
 import { PaperPlus, Delete, Edit } from 'react-iconly'
 import { useEffect, useState, useRef } from 'react'
 import { updateUserData, createArticle, deleteResource, retrieveAsset, updateResource } from '@/api'
+import ReactMarkdown from 'react-markdown'
 
 function getNextName(title, directory) {
   const remainder = title.substring(directory.length)
@@ -64,7 +65,7 @@ function createPageTemplate(context, setContext) {
 }
 
 function RenderPage({content}) {
-  return (<Text>{content}</Text>)
+  return (<ReactMarkdown>{content}</ReactMarkdown>)
 }
 
 function editPageTemplate(context, setContext) {
@@ -78,7 +79,7 @@ function editPageTemplate(context, setContext) {
 
   const modal = (
     <Modal closeButton blur open={modalOpen} onClose={() => setModalOpen(false)}
-      onOpen={() => setTimeout(() => {}, 0)} width="50em">
+      onOpen={() => setTimeout(() => {}, 0)} fullScreen>
       <Modal.Header>
         <Navbar isCompact css={{$$navbarBackgroundColor: "transparent", $$navbarBlurBackgroundColor: "transparent"}}>
           <Navbar.Content>
@@ -90,9 +91,13 @@ function editPageTemplate(context, setContext) {
       <Modal.Body>
         <div style={{display: mode=='edit' ? '' : 'none'}}>
           <Text>Preview:</Text>
-          <Input ref={preview} aria-label="page preview" placeholder="page preview"/>
+          <Spacer y={0.5}/>
+          <Input ref={preview} aria-label="page preview" placeholder="page preview" bordered width="100%"/>
+          <Spacer y={0.5}/>
           <Text>Content:</Text>
-          <Textarea placeholder="Page content:" placeholder="content" ref={content}/>
+          <Spacer y={0.5}/>
+          <Textarea placeholder="Page content:" placeholder="content" ref={content} bordered width="100%" maxRows={1024}/>
+          <Spacer y={0.5}/>
           <Text color="error">{error}</Text>
         </div>
         <div style={{display: mode=='view' ? '' : 'none'}}>
