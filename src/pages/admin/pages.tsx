@@ -1,10 +1,11 @@
 import {useGlobalContext} from '@/context'
-import { Container, Text, Card, Button, Modal, Input, Textarea, Navbar, Spacer } from '@nextui-org/react';
+import { Container, Text, Card, Button, Modal, Input, Textarea, Navbar, Spacer, Dropdown } from '@nextui-org/react';
 import Head from 'next/head'
-import { PaperPlus, Delete, Edit } from 'react-iconly'
+import { PaperPlus, Delete, Edit, Image2 } from 'react-iconly'
 import { useEffect, useState, useRef } from 'react'
 import { updateUserData, createArticle, deleteResource, retrieveAsset, updateResource } from '@/api'
 import ReactMarkdown from 'react-markdown'
+import { AssetPicker } from '@/assetPicker'
 
 function getNextName(title, directory) {
   const remainder = title.substring(directory.length)
@@ -77,6 +78,14 @@ function editPageTemplate(context, setContext) {
   const content = useRef()
   const [mode, setMode] = useState('edit')
 
+  function addImage(asset) {
+    const cursorPosition = content.current.selectionStart
+    const textBefore = content.current.value.substring(0, cursorPosition);
+    const textAfter = content.current.value.substring(cursorPosition, content.current.value.length);
+    content.current.value = `${textBefore}![](${asset.preview})${textAfter}`
+    window.dispatchEvent(new Event('resize'));
+  }
+
   const modal = (
     <Modal closeButton blur open={modalOpen} onClose={() => setModalOpen(false)}
       onOpen={() => setTimeout(() => {}, 0)} fullScreen>
@@ -86,6 +95,15 @@ function editPageTemplate(context, setContext) {
             <Navbar.Link isActive={mode == "edit"} onPress={() => setMode('edit')}>Edit</Navbar.Link>
             <Navbar.Link isActive={mode == "view"} onPress={() => setMode('view')}>View</Navbar.Link>
           </Navbar.Content>
+          {mode == "edit" && (
+            <Navbar.Content>
+              <Navbar.Item>
+                <AssetPicker onPick={addImage}>
+                  <Dropdown.Button auto icon={<Image2 />}/>
+                </AssetPicker>
+              </Navbar.Item>
+            </Navbar.Content>
+          )}
         </Navbar>
       </Modal.Header>
       <Modal.Body>
@@ -96,7 +114,7 @@ function editPageTemplate(context, setContext) {
           <Spacer y={0.5}/>
           <Text>Content:</Text>
           <Spacer y={0.5}/>
-          <Textarea placeholder="Page content:" placeholder="content" ref={content} bordered width="100%" maxRows={1024}/>
+          <Textarea placeholder="Page content:" placeholder="content" ref={content} bordered width="100%" maxRows={100}/>
           <Spacer y={0.5}/>
           <Text color="error">{error}</Text>
         </div>

@@ -131,7 +131,7 @@ export default function Settings() {
       <Card>
         <Card.Header><Text h2>Profile picture</Text></Card.Header>
         <Card.Body><AssetPicker selection={context.profilePicture} 
-          onPick={asset => setProfilePicture(context, setContext, asset)}/>
+          onPick={asset => setProfilePicture(context, setContext, asset)} noselect="no profile picture"/>
         </Card.Body>
       </Card>
       <Spacer y={1}/>
