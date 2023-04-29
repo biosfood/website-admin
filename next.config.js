@@ -5,7 +5,7 @@ const nextConfig = {
     measure: false,
   },
   env: {
-    api: 'localhost:4000',
+    api: 'http://localhost:4000',
   },
 }
 

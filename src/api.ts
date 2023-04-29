@@ -2,7 +2,7 @@ import {createHash} from 'crypto'
 import { useGlobalContext } from '@/context'
 
 function doGraphQl(query: string, variables) {
-  return fetch("http://localhost:4000/graphql", {
+  return fetch(`${process.env.api}/graphql`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

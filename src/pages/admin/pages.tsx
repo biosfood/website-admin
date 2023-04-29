@@ -82,7 +82,7 @@ function editPageTemplate(context, setContext) {
     const cursorPosition = content.current.selectionStart
     const textBefore = content.current.value.substring(0, cursorPosition);
     const textAfter = content.current.value.substring(cursorPosition, content.current.value.length);
-    content.current.value = `${textBefore}![](${asset.preview})${textAfter}`
+    content.current.value = `${textBefore}![](${process.env.api}/resource?id=${asset.id})${textAfter}`
     window.dispatchEvent(new Event('resize'));
   }
 
@@ -132,14 +132,14 @@ function editPageTemplate(context, setContext) {
   function editPage(page) {
     setPageToEdit(page)
     setModalOpen(true)
-    console.log(page)
+    setMode("edit")
     retrieveAsset(context, page.id).then(resource => {
       if (!resource) {
         return setModalOpen(false)
       }
-      console.log(resource)
       preview.current.value = resource.preview
       content.current.value = resource.content
+      window.dispatchEvent(new Event('resize'));
     })
   }
   
