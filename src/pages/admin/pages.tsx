@@ -1,7 +1,7 @@
 import {useGlobalContext} from '@/context'
 import { Container, Text, Card, Button, Modal, Input, Textarea, Navbar, Spacer, Dropdown } from '@nextui-org/react';
 import Head from 'next/head'
-import { PaperPlus, Delete, Edit, Image2 } from 'react-iconly'
+import { PaperPlus, Delete, Edit, Image2, Send } from 'react-iconly'
 import { useEffect, useState, useRef } from 'react'
 import { updateUserData, createArticle, deleteResource, retrieveAsset, updateResource } from '@/api'
 import ReactMarkdown from 'react-markdown'
@@ -78,13 +78,19 @@ function editPageTemplate(context, setContext) {
   const content = useRef()
   const [mode, setMode] = useState('edit')
 
-  function addImage(asset) {
+  function insertText(text) {
     const cursorPosition = content.current.selectionStart
     const textBefore = content.current.value.substring(0, cursorPosition);
     const textAfter = content.current.value.substring(cursorPosition, content.current.value.length);
-    content.current.value = `${textBefore}![](${process.env.api}/resource?id=${asset.id})${textAfter}`
+    content.current.value = `${textBefore}${text}${textAfter}`
     window.dispatchEvent(new Event('resize'));
   }
+
+  function addImage(asset) {
+    insertText(`![](${process.env.api}/resource?id=${asset.id})`)
+  }
+
+  const createLink = () => insertText(`[here](URL)`)
 
   const modal = (
     <Modal closeButton blur open={modalOpen} onClose={() => setModalOpen(false)}
@@ -101,6 +107,9 @@ function editPageTemplate(context, setContext) {
                 <AssetPicker onPick={addImage}>
                   <Dropdown.Button auto icon={<Image2 />}/>
                 </AssetPicker>
+              </Navbar.Item>
+              <Navbar.Item>
+                <Button auto icon={<Send />} onPress={createLink}/>
               </Navbar.Item>
             </Navbar.Content>
           )}
