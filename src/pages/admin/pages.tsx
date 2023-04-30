@@ -90,7 +90,7 @@ function editPageTemplate(context, setContext) {
     insertText(`![](${process.env.api}/resource?id=${asset.id})`)
   }
 
-  const createLink = () => insertText(`[here](URL)`)
+  const addLink = (asset) => insertText(`[${asset != null ? asset.name : "HERE"}](${asset!= null ? asset.name : "URL"})`)
 
   const modal = (
     <Modal closeButton blur open={modalOpen} onClose={() => setModalOpen(false)}
@@ -109,7 +109,9 @@ function editPageTemplate(context, setContext) {
                 </AssetPicker>
               </Navbar.Item>
               <Navbar.Item>
-                <Button auto icon={<Send />} onPress={createLink}/>
+                <AssetPicker onPick={addLink} resourceType={"article"} noselect={"custom link URL"}>
+                  <Dropdown.Button auto icon={<Send />}/>
+                </AssetPicker>
               </Navbar.Item>
             </Navbar.Content>
           )}

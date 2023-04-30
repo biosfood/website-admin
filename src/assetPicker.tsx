@@ -5,7 +5,7 @@ import {loadAssets, retrieveAsset} from '@/api'
 import { CloseSquare } from 'react-iconly'
 import Autosuggest from 'react-autosuggest';
 
-export function AssetPicker({selection, onPick, children, noselect}) {
+export function AssetPicker({selection, onPick, children, noselect, resourceType}) {
   const {context, setContext} = useGlobalContext()
   const [suggestions, setSuggestions] = useState([])
   const [currentAsset, setCurrentAsset] = useState('')
@@ -20,6 +20,8 @@ export function AssetPicker({selection, onPick, children, noselect}) {
     selection ?
       retrieveAsset(context, selection.id).then(asset => setCurrentAsset(asset.content)) : 
       setCurrentAsset("")}, [selection])
+
+  resourceType = resourceType != undefined ? resourceType : "image"
   
   return (
     <Grid.Container>
@@ -35,8 +37,11 @@ export function AssetPicker({selection, onPick, children, noselect}) {
               <Dropdown.Item key="0">{noselect}</Dropdown.Item>
             </Dropdown.Section>}
             <Dropdown.Section>
-              {context.resources.filter(it => it.resourceType == 'image').map(asset => (<Dropdown.Item key={asset.id} icon={
-                <Image src={asset.preview} width={24}/>}>{asset.name}</Dropdown.Item>))}
+              {context.resources.filter(it => it.resourceType == resourceType).map(asset => (
+                <Dropdown.Item key={asset.id}
+                  icon={resourceType == "image" && <Image src={asset.preview} width={24}/>}>
+                  {asset.name}
+                </Dropdown.Item>))}
             </Dropdown.Section>
           </Dropdown.Menu>
         </Dropdown>
