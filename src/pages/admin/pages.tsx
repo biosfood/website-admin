@@ -79,18 +79,18 @@ function editPageTemplate(context, setContext) {
   const [mode, setMode] = useState('edit')
 
   function insertText(text) {
-    const cursorPosition = content.current.selectionStart
-    const textBefore = content.current.value.substring(0, cursorPosition);
-    const textAfter = content.current.value.substring(cursorPosition, content.current.value.length);
-    content.current.value = `${textBefore}${text}${textAfter}`
+    const selectedText = content.current.value.substring(content.current.selectionStart, content.current.selectionEnd)
+    content.current.focus()
+    document.execCommand("insertText", false, text(selectedText))
     window.dispatchEvent(new Event('resize'));
   }
 
   function addImage(asset) {
-    insertText(`![](${process.env.api}/resource?id=${asset.id})`)
+    insertText(text => `![${text}](${process.env.api}/resource?id=${asset.id})`)
   }
 
-  const addLink = (asset) => insertText(`[${asset != null ? asset.name : "HERE"}](${asset!= null ? asset.name : "URL"})`)
+  const addLink = (asset) => insertText(text =>
+    `[${text != "" ? text : (asset != null ? asset.name : "HERE")}](${asset!= null ? asset.name : "URL"})`)
 
   const modal = (
     <Modal closeButton blur open={modalOpen} onClose={() => setModalOpen(false)}
