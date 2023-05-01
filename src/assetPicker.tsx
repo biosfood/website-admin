@@ -18,7 +18,7 @@ export function AssetPicker({selection, onPick, children, noselect, resourceType
 
   useEffect(() => {
     selection ?
-      retrieveAsset(context, selection.id).then(asset => setCurrentAsset(asset.content)) : 
+      retrieveAsset(selection.id).then(asset => setCurrentAsset(asset.content)) : 
       setCurrentAsset("")}, [selection])
 
   resourceType = resourceType != undefined ? resourceType : "image"

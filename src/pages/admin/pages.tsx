@@ -65,7 +65,7 @@ function createPageTemplate(context, setContext) {
   return [modal, createPage]
 }
 
-function RenderPage({content}) {
+export function RenderPage({content}) {
   return (<ReactMarkdown>{content}</ReactMarkdown>)
 }
 
@@ -144,7 +144,7 @@ function editPageTemplate(context, setContext) {
     setPageToEdit(page)
     setModalOpen(true)
     setMode("edit")
-    retrieveAsset(context, page.id).then(resource => {
+    retrieveAsset(page.id).then(resource => {
       if (!resource) {
         return setModalOpen(false)
       }

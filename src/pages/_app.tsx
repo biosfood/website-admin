@@ -5,7 +5,7 @@ import { ContextProvider, useGlobalContext } from '@/context'
 import { Navigation, user } from "@/navigation"
 import { useEffect } from 'react'
 import { useRouter } from "next/router";
-import { updateUserData, loadAssets } from '@/api'
+import { updateUserData, loadAssets, getResources } from '@/api'
 import { Footer } from '@/footer'
 
 const theme = createTheme({type: "dark",})
@@ -47,6 +47,13 @@ export default function App({ Component, pageProps }: AppProps) {
       }
       if (!context.token && router.pathname.startsWith("/admin")) {
         router.push("/login")
+      }
+      if (router.query.slug != undefined) {
+        const resources = getResources(router.query.slug[0])
+        if (resources == undefined) {
+          return
+        }
+        setContext({...context, resources})
       }
     }
     useEffect(updateContext, [context.token])

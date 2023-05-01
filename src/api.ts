@@ -80,9 +80,9 @@ export function setProfilePicture(context, setContext, asset) {
                   })
 }
 
-export function retrieveAsset(context, id) {
-  return doGraphQl('query GetAsset($token: String, $id: Int) {resource(token: $token, id: $id) {content, preview}}',
-                   {token: context.token, id})
+export function retrieveAsset(id) {
+  return doGraphQl('query GetAsset($id: Int) {resource(id: $id) {content, preview}}',
+                   {id})
   .then(response => response.data?.resource)
 }
 
@@ -107,5 +107,12 @@ export function updateResource(context, setContext, id, preview, content) {
   .then(response => {
     updateUserData(context, setContext)
     return response?.data?.updateResource
+  })
+}
+
+export function getResources(username) {
+  return doGraphQl('query GetResources($username: String) {resources(username: $username) {id, name, preview, resourceType}}')
+  .then(response => {
+    return response?.data?.resources
   })
 }
