@@ -111,7 +111,8 @@ export function updateResource(context, setContext, id, preview, content) {
 }
 
 export function getResources(username) {
-  return doGraphQl('query GetResources($username: String) {resources(username: $username) {id, name, preview, resourceType}}')
+  return doGraphQl('query GetResources($username: String) {resources(username: $username) {id, name, preview, resourceType}}',
+                   {username})
   .then(response => {
     return response?.data?.resources
   })

@@ -25,7 +25,7 @@ export function Navigation({pages, enforceLogin, setUserState}) {
     }
   }
 
-  return (
+  return (router.pathname.startsWith("/admin") || router.pathname == "/") && (
     <Navbar variant="floating" isBordered>
       <Navbar.Brand>
         <Logo/>

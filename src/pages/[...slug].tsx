@@ -12,7 +12,7 @@ export default function Page({props}) {
   if (!slug) {
     return
   }
-  const resourceName = slug.length > 1 ? slug.slice(1).join("/") : "/"
+  const resourceName = slug.length > 1 ? "/" + slug.slice(1).join("/") : "/"
   const resource = context.resources.find(resource => resource.name == resourceName)
   const [content, setContent] = useState("")
   if (resource) {
