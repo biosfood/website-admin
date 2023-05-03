@@ -6,6 +6,7 @@ import { useEffect, useState, useRef } from 'react'
 import { updateUserData, createArticle, deleteResource, retrieveAsset, updateResource } from '@/api'
 import ReactMarkdown from 'react-markdown'
 import { AssetPicker } from '@/assetPicker'
+import { Client } from "react-hydration-provider";
 
 function getNextName(title, directory) {
   const remainder = title.substring(directory.length)
@@ -183,7 +184,7 @@ function Page({pageDirectory, context, setContext, createPage, editPage}) {
           <Button auto color="success" icon={(<PaperPlus/>)} onPress={() => createPage(pageDirectory)}/>
         </Container>
         {children.map(child => (<Page pageDirectory={pageDirectory + (pageDirectory == '/' ? '' : '/') + child}
-          context={context} setContext={setContext} createPage={createPage} editPage={editPage}/>))}
+          context={context} setContext={setContext} createPage={createPage} editPage={editPage} key={child}/>))}
       </Card.Body>
     </Card>
   )
@@ -203,7 +204,9 @@ export default function Pages() {
         <title>Pages</title>
       </Head>
       <Text h1>Pages overview</Text>
-      <Page pageDirectory='/' context={context} setContext={setContext} createPage={createPage} editPage={editPage}/>
+      <Client>
+        <Page pageDirectory='/' context={context} setContext={setContext} createPage={createPage} editPage={editPage}/>
+      </Client>
     </Container>
   )
 }

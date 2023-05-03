@@ -1,5 +1,5 @@
 import type { AppProps } from 'next/app'
-import {SSRProvider} from '@react-aria/ssr';
+import { SSRProvider } from '@react-aria/ssr';
 import { createTheme, NextUIProvider } from "@nextui-org/react"
 import { ContextProvider, useGlobalContext } from '@/context'
 import { Navigation, user } from "@/navigation"
@@ -7,6 +7,7 @@ import { useEffect } from 'react'
 import { useRouter } from "next/router";
 import { updateUserData, loadAssets, getResources } from '@/api'
 import { Footer } from '@/footer'
+import { HydrationProvider } from "react-hydration-provider";
 
 const theme = createTheme({type: "dark",})
 
@@ -77,12 +78,12 @@ export default function App({ Component, pageProps }: AppProps) {
   }
 
   return ( 
-    <SSRProvider>
+    <HydrationProvider>
       <NextUIProvider theme={theme}>
         <ContextProvider>
           <MainPage />
         </ContextProvider>
       </NextUIProvider>
-    </SSRProvider>
+    </HydrationProvider>
   )
 }

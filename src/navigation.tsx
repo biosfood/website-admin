@@ -1,23 +1,15 @@
 import { Navbar, Dropdown, Avatar, Text, Button } from '@nextui-org/react'
 import { useGlobalContext } from '@/context'
-import { useState, useRef } from 'react'
+import { useState, useRef, useId } from 'react'
 import { logout } from '@/api'
 import { useRouter } from "next/router";
 import Link from 'next/link'
 import {Logo} from '@/logo'
+import { Client } from "react-hydration-provider";
 
 export function Navigation({pages, enforceLogin, setUserState}) {
   const {context, setContext} = useGlobalContext()
   const router = useRouter()
-
-  function CustomLink({ target, children}) {
-    const linkRef = useRef()
-
-    return <>
-      <Link ref={linkRef} href={target} />
-      <Navbar.Link isActive={router.pathname == target} onPress={() => linkRef.current.click()}>{children}</Navbar.Link>
-    </>
-  }
 
   function onAction(key) {
     if (key == 'settings') {
@@ -25,16 +17,16 @@ export function Navigation({pages, enforceLogin, setUserState}) {
     }
   }
 
-  return (router.pathname.startsWith("/admin") || router.pathname == "/") && (
+  return (router.pathname.startsWith("/admin") || router.pathname == "/") && (<Client>
     <Navbar variant="floating" isBordered>
       <Navbar.Brand>
         <Logo/>
       </Navbar.Brand>
       <Navbar.Content variant="highlight-rounded">
         {pages.map((page) => 
-        <CustomLink target={page.target} key={page.target}>
+        <Link href={page.target} passHref legacyBehavior key={page.target}><Navbar.Link isActive={router.pathname == page.target}>
           {page.name}
-        </CustomLink>)}
+        </Navbar.Link></Link>)}
       </Navbar.Content>
       <Navbar.Content css={{jc: "flex-end"}}>
         {context.username ? (
@@ -59,6 +51,6 @@ export function Navigation({pages, enforceLogin, setUserState}) {
           <Navbar.Link color="secondary" href="/login" aria-label="Log in">Log in</Navbar.Link>
         )}
       </Navbar.Content>
-    </Navbar>
+    </Navbar></Client>
   )
 }

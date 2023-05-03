@@ -1,6 +1,7 @@
 import { Html, Head, Main, NextScript } from 'next/document'
 import { ThemeProvider } from 'next-themes';
 import { CssBaseline } from '@nextui-org/react';
+import { SSRProvider } from 'react-aria';
 
 export default function Document() {
   return (
@@ -8,8 +9,10 @@ export default function Document() {
       <Head>{CssBaseline.flush()}
       </Head>
       <body>
-        <Main />
-        <NextScript />
+        <SSRProvider suppressHydrationWarning>
+          <Main />
+          <NextScript />
+        </SSRProvider>
       </body>
     </Html>
   )
