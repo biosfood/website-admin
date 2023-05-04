@@ -1,5 +1,6 @@
-import { useContext, useState, createContext, useEffect } from 'react'
+import { useContext, useState, createContext, useEffect, Dispatch, SetStateAction } from 'react'
 import { useRouter } from 'next/router'
+import { Resource } from '@/api'
 
 interface Context {
   username: string,
@@ -7,12 +8,17 @@ interface Context {
   path: string,
   token: string,
   profilePicture: any,
-  resources: Array,
+  resources: Array<Resource>,
 }
 
-export type {Context}
+interface ContextState {
+  context: Context,
+  setContext: Dispatch<SetStateAction<Context>>,
+}
 
-export const defaultContext = {
+export type {Context, ContextState}
+
+export const defaultContext: Context = {
   username: '',
   useremail: '',
   path: '',
@@ -21,5 +27,5 @@ export const defaultContext = {
   resources: [],
 }
 
-export const GlobalContext = createContext(defaultContext)
+export const GlobalContext = createContext<ContextState>({context: defaultContext, setContext: () => {}})
 export const useGlobalContext = () => useContext(GlobalContext)
