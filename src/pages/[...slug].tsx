@@ -8,13 +8,13 @@ import { RenderPage } from '@/pages/admin/pages'
 export default function Page({props}) {
   const {context, setContext} = useGlobalContext()
   const router = useRouter()
+  const [content, setContent] = useState("")
   const slug = router.query.slug
   if (!slug) {
     return
   }
   const resourceName = slug.length > 1 ? "/" + slug.slice(1).join("/") : "/"
   const resource = context.resources.find(resource => resource.name == resourceName)
-  const [content, setContent] = useState("")
   if (resource) {
     retrieveAsset(resource.id).then(resource => setContent(resource?.content))
   }

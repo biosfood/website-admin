@@ -39,14 +39,14 @@ export function AssetPicker({selection, onPick, children, noselect, resourceType
             <Dropdown.Section>
               {context.resources.filter(it => it.resourceType == resourceType).map(asset => (
                 <Dropdown.Item key={asset.id}
-                  icon={resourceType == "image" && <Image src={asset.preview} width={24}/>}>
+                  icon={resourceType == "image" && <Image src={asset.preview} width={24} alt=""/>}>
                   {asset.name}
                 </Dropdown.Item>))}
             </Dropdown.Section>
           </Dropdown.Menu>
         </Dropdown>
       </Grid>
-      <Grid xs><Image src={currentAsset}/></Grid>
+      <Grid xs><Image src={currentAsset} alt="currently selected asset"/></Grid>
     </Grid.Container>
   )
 }
