@@ -14,7 +14,7 @@ function getNextName(title, directory) {
   return parts[0]? parts[0] : parts[1]
 }
 
-function createPageTemplate(context, setContext) {
+function CreatePageTemplate(context, setContext) {
   const [modalOpen, setModalOpen] = useState(false)
   const [startNewName, setStartNewName] = useState('')
   const [error, setError] = useState('')
@@ -70,7 +70,7 @@ export function RenderPage({content}) {
   return (<ReactMarkdown>{content}</ReactMarkdown>)
 }
 
-function editPageTemplate(context, setContext) {
+function EditPageTemplate(context, setContext) {
   const [modalOpen, setModalOpen] = useState(false)
   const [error, setError] = useState('')
   const [pageToEdit, setPageToEdit] = useState({})
@@ -126,7 +126,7 @@ function editPageTemplate(context, setContext) {
           <Spacer y={0.5}/>
           <Text>Content:</Text>
           <Spacer y={0.5}/>
-          <Textarea placeholder="Page content:" placeholder="content" ref={content} bordered width="100%" maxRows={100}/>
+          <Textarea placeholder="content" ref={content} bordered width="100%" maxRows={100}/>
           <Spacer y={0.5}/>
           <Text color="error">{error}</Text>
         </div>
@@ -193,8 +193,8 @@ function Page({pageDirectory, context, setContext, createPage, editPage}) {
 
 export default function Pages() {
   const {context, setContext} = useGlobalContext()
-  const [newPageModal, createPage] = createPageTemplate(context, setContext)
-  const [editPageModal, editPage] = editPageTemplate(context, setContext)
+  const [newPageModal, createPage] = CreatePageTemplate(context, setContext)
+  const [editPageModal, editPage] = EditPageTemplate(context, setContext)
 
   return (
     <Container style={{marginBottom: '10px'}}>

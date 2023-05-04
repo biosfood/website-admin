@@ -16,13 +16,13 @@ export default function Assets() {
   }
 
   function File() {
+    const [imageSource, setImageSource] = useState('')
+    const titleRef = useRef()
     if (!filesToProcess.length) {
       return (<FileDropZone onFileDrop={onFileDrop}/>)
     } else {
       const file = filesToProcess[0]
-      const [imageSource, setImageSource] = useState('')
       const reader = new FileReader()
-      const titleRef = useRef()
       reader.readAsDataURL(file)
       reader.onload = () => {
         const image = new Image()
