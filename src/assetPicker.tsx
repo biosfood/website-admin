@@ -1,7 +1,7 @@
 import {useGlobalContext} from '@/context'
 import { Card, Text, Container, Spacer, Image, Input, Dropdown, Button, Grid } from '@nextui-org/react'
 import { useEffect, useState } from 'react'
-import {loadAssets, retrieveAsset} from '@/api'
+import { retrieveAsset } from '@/api'
 import { CloseSquare } from 'react-iconly'
 import Autosuggest from 'react-autosuggest';
 

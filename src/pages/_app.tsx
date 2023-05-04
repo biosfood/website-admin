@@ -1,7 +1,8 @@
 import type { AppProps } from 'next/app'
 import { SSRProvider } from '@react-aria/ssr';
 import { createTheme, NextUIProvider } from "@nextui-org/react"
-import { ContextProvider, useGlobalContext } from '@/context'
+import { useGlobalContext } from '@/context'
+import { ContextProvider } from '@/ContextProvider'
 import { Navigation, user } from "@/navigation"
 import { useEffect } from 'react'
 import { useRouter } from "next/router";

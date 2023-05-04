@@ -1,7 +1,8 @@
-import {createHash} from 'crypto'
+import { createHash } from 'crypto'
 import { useGlobalContext } from '@/context'
+import type { Context } from '@/context'
 
-function doGraphQl(query: string, variables) {
+function doGraphQl(query: string, variables: object) {
   return fetch(`${process.env.api}/graphql`, {
     method: 'POST',
     headers: {
@@ -18,7 +19,7 @@ function processPassword(password: string) {
   return "MD5-" + hash.digest("base64") // ;)
 }
 
-export function login(context, setContext, email: string, password: string, updateContext = true) {
+export function login(context: Context, setContext: (context: Context) => void, email: string, password: string, updateContext: boolean = true) {
   return doGraphQl(
     `mutation Login($email: String, $password: String) {login(email: $email, password: $password)}`,
     {email, password: processPassword(password)}).then(response => {
@@ -29,7 +30,7 @@ export function login(context, setContext, email: string, password: string, upda
     })
 }
 
-export function updateUserData(context, setContext) {
+export function updateUserData(context: Context, setContext: (context: Context) => void) {
   return doGraphQl('query GetUserData($token: String) {userData(token: $token) '+
                    '{name, email, profilePicture {id, name, preview}, resources {id, name, preview, resourceType}}}', {token: context.token})
   .then(response => {
@@ -46,32 +47,32 @@ export function updateUserData(context, setContext) {
   })
 }
 
-export function createResource(context, type, name, preview, content) {
+export function createResource(context: Context, type: string, name: string, preview: string, content: string) {
   return doGraphQl('mutation CreateResource($token: String, $type: String, $name: String, $preview: String, $content: String)'+
                    '{createResource(token: $token, type: $type, name: $name, preview: $preview, content: $content) {id} }',
                   {token: context.token, name, type, preview, content})
 }
 
-export function createAsset(context, name, preview, content) {
+export function createAsset(context: Context, name: string, preview: string, content: string) {
   return createResource(context, 'image', name, preview, content)
 }
 
-export function createArticle(context, name, preview, content) {
+export function createArticle(context: Context, name: string, preview: string, content: string) {
   return createResource(context, 'article', name, preview, content)
 }
 
 
-export function deleteResource(context, id) {
+export function deleteResource(context: Context, id: number) {
   return doGraphQl('mutation DeleteResource($token: String, $id: Int)'+
                    '{deleteResource(token: $token, id: $id) }',
                   {token: context.token, id})
 }
 
-export function logout({context, setContext}) {
+export function logout(context: Context, setContext: (context: Context) => void) {
   setContext({...context, username: '', useremail: '', token: 'REMOVE_NOW'})
 }
 
-export function setProfilePicture(context, setContext, asset) {
+export function setProfilePicture(context: Context, setContext: (context: Context) => void, asset: any) {
   const id = asset ? asset.id : 0
   return doGraphQl('mutation SetProfilePicture($token: String, $id: Int){setProfilePicture(token: $token, id: $id)}',
                    {token: context.token, id}).then(response => {
@@ -80,27 +81,27 @@ export function setProfilePicture(context, setContext, asset) {
                   })
 }
 
-export function retrieveAsset(id) {
+export function retrieveAsset(id: number) {
   return doGraphQl('query GetAsset($id: Int) {resource(id: $id) {content, preview}}',
                    {id})
   .then(response => response.data?.resource)
 }
 
-export function changePassword(context, newPassword) {
+export function changePassword(context: Context, newPassword: string) {
   return doGraphQl('mutation ChangePassword($token: String, $newPassword: String)'+
                    '{changePassword(token: $token, newPassword: $newPassword)}',
                     {token: context.token, newPassword: processPassword(newPassword)})
   .then(response => response.data?.changePassword)
 }
 
-export function changeEmail(context, newEmail) {
+export function changeEmail(context: Context, newEmail: string) {
   return doGraphQl('mutation ChangeEmail($token: String, $newEmail: String)'+
                    '{changeEmail(token: $token, newEmail: $newEmail)}',
                     {token: context.token, newEmail})
   .then(response => response.data?.changeEmail)
 }
 
-export function updateResource(context, setContext, id, preview, content) {
+export function updateResource(context: Context, setContext: (context: Context) => void, id: number, preview: string, content: string) {
   return doGraphQl('mutation UpdateResource($token: String, $id: Int, $preview: String, $content: String)'+
                    '{updateResource(token: $token, id: $id, preview: $preview, content: $content)}',
                     {token: context.token, id, preview, content})
@@ -110,7 +111,7 @@ export function updateResource(context, setContext, id, preview, content) {
   })
 }
 
-export function getResources(username) {
+export function getResources(username: string) {
   return doGraphQl('query GetResources($username: String) {resources(username: $username) {id, name, preview, resourceType}}',
                    {username})
   .then(response => {

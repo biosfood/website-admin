@@ -44,7 +44,7 @@ export function Navigation({pages, enforceLogin, setUserState}) {
                 Settings
             </Dropdown.Item>
             <Dropdown.Item key="logout" withDivider>
-              <Button flat color="error" onPress={() => logout({context, setContext})}>Log Out</Button>
+              <Button flat color="error" onPress={() => logout(context, setContext)}>Log Out</Button>
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>) : (

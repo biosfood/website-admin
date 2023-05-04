@@ -1,17 +1,5 @@
 import { useContext, useState, createContext, useEffect } from 'react'
-import { useRouter } from 'next/router'
-
-const defaultContext = {
-  username: '',
-  useremail: '',
-  path: '',
-  token: '???',
-  profilePicture: null,
-  resources: [],
-}
-
-const GlobalContext = createContext(defaultContext)
-export const useGlobalContext = () => useContext(GlobalContext)
+import { GlobalContext, defaultContext } from '@/context'
 
 export function ContextProvider({children}) {
   const [context, setContext] = useState(defaultContext)
