@@ -53,5 +53,5 @@ export function Navigation({pages, enforceLogin}: {pages: Page[], enforceLogin?:
         )}
       </Navbar.Content>
     </Navbar></Client>
-  )
+  ) || null
 }

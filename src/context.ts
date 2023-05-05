@@ -6,9 +6,10 @@ interface Context {
   username: string,
   useremail: string,
   path: string,
-  token: string,
+  token?: string,
   profilePicture: any,
   resources: Array<Resource>,
+  updateContext: () => void,
 }
 
 interface ContextState {
@@ -25,6 +26,7 @@ export const defaultContext: Context = {
   token: '???',
   profilePicture: null,
   resources: [],
+  updateContext: () => {},
 }
 
 export const GlobalContext = createContext<ContextState>({context: defaultContext, setContext: () => {}})

@@ -9,7 +9,7 @@ export default function Document() {
       <Head>{CssBaseline.flush()}
       </Head>
       <body>
-        <SSRProvider suppressHydrationWarning>
+        <SSRProvider>
           <Main />
           <NextScript />
         </SSRProvider>

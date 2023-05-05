@@ -3,10 +3,10 @@ import { SSRProvider } from '@react-aria/ssr';
 import { createTheme, NextUIProvider } from "@nextui-org/react"
 import { useGlobalContext } from '@/context'
 import { ContextProvider } from '@/ContextProvider'
-import { Navigation, user } from "@/navigation"
+import { Navigation } from "@/navigation"
 import { useEffect } from 'react'
 import { useRouter } from "next/router";
-import { updateUserData, loadAssets, getResources } from '@/api'
+import { updateUserData, getResources } from '@/api'
 import { Footer } from '@/footer'
 import { HydrationProvider } from "react-hydration-provider";
 
@@ -27,7 +27,6 @@ export const adminPages = [
   new Page("/admin/assets", "Assets"),
   new Page("/admin/pages", "Pages"),
 ]
-
 
 export default function App({ Component, pageProps }: AppProps) {
   function MainPage( ) {
@@ -65,7 +64,7 @@ export default function App({ Component, pageProps }: AppProps) {
       setContext({...context, path: router.pathname})
     }, [router.pathname])
 
-    useEffect(() => setContext({...context, token: localStorage.getItem('token'), updateContext}), [])
+    useEffect(() => setContext({...context, token: localStorage.getItem('token') || undefined, updateContext}), [])
 
     return (
       <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '100vh'}}>
