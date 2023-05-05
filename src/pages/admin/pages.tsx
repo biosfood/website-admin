@@ -1,28 +1,28 @@
-import {useGlobalContext} from '@/context'
-import { Container, Text, Card, Button, Modal, Input, Textarea, Navbar, Spacer, Dropdown } from '@nextui-org/react';
+import { useGlobalContext, ContextState } from '@/context'
+import { Container, Text, Card, Button, Modal, Input, Textarea, Navbar, Spacer, Dropdown, FormElement } from '@nextui-org/react';
 import Head from 'next/head'
 import { PaperPlus, Delete, Edit, Image2, Send } from 'react-iconly'
 import { useEffect, useState, useRef } from 'react'
-import { updateUserData, createArticle, deleteResource, retrieveAsset, updateResource } from '@/api'
+import { updateUserData, createArticle, deleteResource, retrieveAsset, updateResource, Resource } from '@/api'
 import ReactMarkdown from 'react-markdown'
 import { AssetPicker } from '@/assetPicker'
 import { Client } from "react-hydration-provider";
 
-function getNextName(title, directory) {
+function getNextName(title: string, directory: string) {
   const remainder = title.substring(directory.length)
   const parts = remainder.split('/')
   return parts[0]? parts[0] : parts[1]
 }
 
-function CreatePageTemplate(context, setContext) {
+function CreatePageTemplate({context, setContext}: ContextState) {
   const [modalOpen, setModalOpen] = useState(false)
   const [startNewName, setStartNewName] = useState('')
   const [error, setError] = useState('')
-  const newName = useRef()
+  const newName = useRef<FormElement>(null)
 
   const modal = (
     <Modal closeButton blur open={modalOpen} onClose={() => setModalOpen(false)}
-      onOpen={() => setTimeout(() => newName.current.value = startNewName,  0)}>
+      onOpen={() => setTimeout(() => newName.current!.value = startNewName,  0)}>
       <Modal.Header>
         <Text h3>Create a new page</Text>
       </Modal.Header>
@@ -38,14 +38,14 @@ function CreatePageTemplate(context, setContext) {
     </Modal>
   )
 
-  function createPage(directory) {
+  function createPage(directory: string) {
     setError('')
     setStartNewName(directory)
     setModalOpen(true)
   }
   
   function finishCreatePage() {
-    const filename = newName.current.value
+    const filename = newName.current!.value
     if (!filename) {
       return setError("Please enter a path for your new page")
     }
@@ -55,7 +55,7 @@ function CreatePageTemplate(context, setContext) {
     if (filename[0] != '/') {
       return setError("Please have your path start with a \"/\"")
     }
-    if (filename.length > 1 && filename[newName.length-1] == '/') {
+    if (filename.length > 1 && filename[filename.length-1] == '/') {
       return setError("Please don't end a page name with a \"/\"")
     }
     createArticle(context, filename, `preview for ${filename}`, '<Content>').then(() => {
@@ -63,35 +63,38 @@ function CreatePageTemplate(context, setContext) {
     })
   }
 
-  return [modal, createPage]
+  return {createPageModal: modal, createPage}
 }
 
-export function RenderPage({content}) {
-  return (<ReactMarkdown>{content}</ReactMarkdown>)
+export function RenderPage({content}: {content?: string}) {
+  return (<ReactMarkdown>{content || ''}</ReactMarkdown>)
 }
 
-function EditPageTemplate(context, setContext) {
+function EditPageTemplate({context, setContext}: ContextState) {
   const [modalOpen, setModalOpen] = useState(false)
   const [error, setError] = useState('')
-  const [pageToEdit, setPageToEdit] = useState({})
+  const [pageToEdit, setPageToEdit] = useState<Resource | null>(null)
   // TODO: change title
-  const preview = useRef()
-  const content = useRef()
+  const preview = useRef<FormElement>(null)
+  const content = useRef<HTMLTextAreaElement>(null)
   const [mode, setMode] = useState('edit')
 
-  function insertText(text) {
-    const selectedText = content.current.value.substring(content.current.selectionStart, content.current.selectionEnd)
-    content.current.focus()
+  function insertText(text: (selected: string) => string) {
+    const selectedText = content.current!.value.substring(content.current!.selectionStart!, content.current!.selectionEnd!)
+    content.current!.focus()
     document.execCommand("insertText", false, text(selectedText))
     window.dispatchEvent(new Event('resize'));
   }
 
-  function addImage(asset) {
-    insertText(text => `![${text}](${process.env.api}/resource?id=${asset.id})`)
+  function addImage(resource?: Resource) {
+    if (!resource) {
+      return
+    }
+    insertText((text: string) => `![${text}](${process.env.api}/resource?id=${resource?.id})`)
   }
 
-  const addLink = (asset) => insertText(text =>
-    `[${text != "" ? text : (asset != null ? asset.name : "HERE")}](${asset!= null ? asset.name : "URL"})`)
+  const addLink = (resource?: Resource) => insertText((text: string) =>
+    `[${text != "" ? text : (resource?.name || "HERE")}](${resource?.name || "URL"})`)
 
   const modal = (
     <Modal closeButton blur open={modalOpen} onClose={() => setModalOpen(false)}
@@ -141,38 +144,39 @@ function EditPageTemplate(context, setContext) {
     </Modal>
   )
 
-  function editPage(page) {
+  function editPage(page: Resource) {
     setPageToEdit(page)
     setModalOpen(true)
     setMode("edit")
-    retrieveAsset(page.id).then(resource => {
+    retrieveAsset(page.id).then((resource: {preview: string, content: string}) => {
       if (!resource) {
         return setModalOpen(false)
       }
-      preview.current.value = resource.preview
-      content.current.value = resource.content
+      preview.current!.value = resource.preview!
+      content.current!.value = resource.content!
       window.dispatchEvent(new Event('resize'));
     })
   }
   
   function finishEditPage() {
-    updateResource(context, setContext, pageToEdit.id, preview.current.value, content.current.value)
+    updateResource(context, setContext, pageToEdit!.id, preview.current!.value, content.current!.value)
     .then(() =>setModalOpen(false))
   }
 
-  return [modal, editPage]
+  return {editPageModal: modal, editPage}
 }
 
-function Page({pageDirectory, context, setContext, createPage, editPage}) {
-  const children = [...new Set(context.resources.filter(resource => resource.name.startsWith(pageDirectory) && resource.name.length > pageDirectory.length)
-                             .map(resource => getNextName(resource.name, pageDirectory)))]
+function Page({pageDirectory, context, setContext, createPage, editPage}:
+              ContextState & {pageDirectory: string, createPage: (directory: string) => void, editPage: (page: Resource) => void}) {
+  const children = Array.from(new Set(context.resources.filter(resource => resource.name.startsWith(pageDirectory) && resource.name.length > pageDirectory.length)
+                             .map(resource => getNextName(resource.name, pageDirectory))))
   const page = context.resources.find(resource => resource.name == pageDirectory)
   return (
     <Card variant="bordered" style={{marginTop: '1em', background: 
         (pageDirectory.slice(0, -1).match(/\//g)|| []).length % 2 ? "var(--nextui-colors-background)" : ""}}>
       <Card.Header style={{display: "flex", justifyContent: "space-between"}}>
         <Text h2>{pageDirectory}</Text>
-        {page ? <div style={{display: "flex", flexDirection: "horizontal", gap: '1em'}}>
+        {page ? <div style={{display: "flex", flexDirection: "row", gap: '1em'}}>
           <Button auto color="error" icon={<Delete />} onPress={() => {
             deleteResource(context, page.id).then(() => updateUserData(context, setContext))}}/>
           <Button auto color="primary" icon={<Edit />} onPress={() => editPage(page)}/>
@@ -193,20 +197,22 @@ function Page({pageDirectory, context, setContext, createPage, editPage}) {
 
 export default function Pages() {
   const {context, setContext} = useGlobalContext()
-  const [newPageModal, createPage] = CreatePageTemplate(context, setContext)
-  const [editPageModal, editPage] = EditPageTemplate(context, setContext)
+  const {createPageModal, createPage} = CreatePageTemplate({context, setContext})
+  const {editPageModal, editPage} = EditPageTemplate({context, setContext})
 
   return (
     <Container style={{marginBottom: '10px'}}>
-      {newPageModal}
-      {editPageModal}
-      <Head>
-        <title>Pages</title>
-      </Head>
-      <Text h1>Pages overview</Text>
-      <Client>
-        <Page pageDirectory='/' context={context} setContext={setContext} createPage={createPage} editPage={editPage}/>
-      </Client>
+      <>
+        {createPageModal}
+        {editPageModal}
+        <Head>
+          <title>Pages</title>
+        </Head>
+        <Text h1>Pages overview</Text>
+        <Client>
+          <Page pageDirectory='/' context={context} setContext={setContext} createPage={createPage} editPage={editPage}/>
+        </Client>
+      </>
     </Container>
   )
 }

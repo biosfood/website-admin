@@ -1,10 +1,9 @@
 import {
   Card, Spacer, Button,
-  Text, Input, Row, Container,
+  Text, Input, Row, Container, FormElement
 } from '@nextui-org/react'
 import Head from 'next/head'
-import validate from 'node-email-validator'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { login as doLogin } from '@/api'
 import { useRouter } from "next/router";
 import {useGlobalContext} from '@/context'
@@ -13,21 +12,21 @@ export default function Login() {
   const router = useRouter()
   const [errorMessage, setErrorMessage] = useState('');
   const {context, setContext} = useGlobalContext()
+  const email = useRef<FormElement>(null)
+  const password = useRef<FormElement>(null)
 
-  async function login(e) {
+  async function login(e: {preventDefault: () => any}) {
     e.preventDefault()
-    const email = document.querySelector("#emailInput").value
-    const password = document.querySelector("#passwordInput").value
-    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email.current!.value)) {
       setErrorMessage("please enter a valid email")
       return
     }
-    if (!password) {
+    if (!password.current!.value) {
       setErrorMessage("please enter a password")
       return
     }
     setErrorMessage("Loading...")
-    doLogin(context, setContext, email, password).then(response => {
+    doLogin(context, setContext, email.current!.value, password.current!.value).then(response => {
       if (!response.data.login) {
         setErrorMessage("access denied")
         return
@@ -63,12 +62,12 @@ export default function Login() {
             <Input aria-label="email"
               bordered fullWidth
               color="primary" size="lg" placeholder="Email"
-              id="emailInput"
+              ref={email}
             />
             <Spacer y={1} />
             <Input aria-label="password" bordered fullWidth 
               type="password" color="primary" size="lg" placeholder="Password"
-              id="passwordInput"
+              ref={password}
             />
             <Spacer y={1} />
             <Text color="error">{errorMessage}</Text>

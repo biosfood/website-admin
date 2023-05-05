@@ -1,7 +1,7 @@
 import { Navigation } from '@/navigation'
-import { Grid, Card, Row, Button, Text, Image as NextImage, Input, Spacer } from '@nextui-org/react';
-import { loadAssets, createAsset, deleteResource, updateUserData } from '@/api'
-import { useEffect, useState, useRef } from 'react';
+import { Grid, Card, Row, Button, Text, Image as NextImage, Input, Spacer, FormElement } from '@nextui-org/react';
+import { createAsset, deleteResource, updateUserData } from '@/api'
+import { useEffect, useState, createRef } from 'react';
 import { FileDropZone } from '@/fileDropZone'
 import { Delete } from 'react-iconly'
 import {useGlobalContext} from '@/context'
@@ -10,44 +10,46 @@ import Head from 'next/head'
 export default function Assets() {
   const {context, setContext} = useGlobalContext()
   
-  const [filesToProcess, setFiles] = useState(new Array())
-  function onFileDrop(file) {
+  const [filesToProcess, setFiles] = useState(new Array<File>())
+  function onFileDrop(file: File) {
     setFiles([...filesToProcess, file])
   }
 
-  function File() {
+
+  function endUpload() {
+    setFiles(filesToProcess.slice(1, filesToProcess.length + 1))
+  }
+
+  function upload(title: string, imageSource: string, readerResult: string) {
+    createAsset(context, title, imageSource, readerResult).then(() => {
+      updateUserData(context, setContext)
+      endUpload()
+    })
+  }
+
+
+  function File({style}: {style?: object}) {
     const [imageSource, setImageSource] = useState('')
-    const titleRef = useRef()
+    const titleRef = createRef<FormElement>()
     if (!filesToProcess.length) {
-      return (<FileDropZone onFileDrop={onFileDrop}/>)
+      return (<FileDropZone onFileDrop={onFileDrop} style={style}/>)
     } else {
       const file = filesToProcess[0]
       const reader = new FileReader()
       reader.readAsDataURL(file)
       reader.onload = () => {
         const image = new Image()
-        image.src = reader.result
+        image.src = reader.result! as string
         image.onload = () => {
           const canvas = document.createElement('canvas');
           canvas.width = 64
           canvas.height = 64
-          canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height)
+          canvas.getContext('2d')?.drawImage(image, 0, 0, canvas.width, canvas.height)
           setImageSource(canvas.toDataURL('image/jpeg', 0.5))
         }
       }
-      function endUpload() {
-        setFiles(filesToProcess.slice(1, filesToProcess.length + 1))
-      }
-
-      function upload() {
-        createAsset(context, titleRef.current.value, imageSource, reader.result).then(() => {
-          updateUserData(context, setContext)
-          endUpload()
-        })
-      }
-
       return (
-        <Card>
+        <Card style={style}>
           <Card.Header><Text h2>Add file</Text></Card.Header>
           <Card.Body>
             <Input aria-label="title"
@@ -58,8 +60,11 @@ export default function Assets() {
             <NextImage src={imageSource} width={256} height={256} css={{scale: 4}}/>
           </Card.Body>
           <Card.Footer style={{display: "flex", justifyContent: "space-between"}}>
-              <Button size="sm" light color="error" onPress={endUpload}>Cancel Upload</Button>
-              <Button size="sm" color="primary" onPress={upload}>Upload Image</Button>
+            <Button size="sm" light color="error" onPress={endUpload}>Cancel Upload</Button>
+            <Button size="sm" color="primary"
+              onPress={() => upload(titleRef.current!.value, imageSource, reader.result! as string)}>
+                Upload Image
+            </Button>
           </Card.Footer>
         </Card>)
     }

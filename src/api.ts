@@ -81,7 +81,7 @@ export function logout(context: Context, setContext: (context: Context) => void)
   setContext({...context, username: '', useremail: '', token: 'REMOVE_NOW'})
 }
 
-export function setProfilePicture(context: Context, setContext: (context: Context) => void, asset: Resource) {
+export function setProfilePicture(context: Context, setContext: (context: Context) => void, asset?: Resource) {
   const id = asset ? asset.id : 0
   return doGraphQl('mutation SetProfilePicture($token: String, $id: Int){setProfilePicture(token: $token, id: $id)}',
                    {token: context.token, id}).then(response => {
@@ -90,7 +90,7 @@ export function setProfilePicture(context: Context, setContext: (context: Contex
                   })
 }
 
-export function retrieveAsset(id: number): Promise<{content: string}> {
+export function retrieveAsset(id: number): Promise<{content: string, preview: string}> {
   return doGraphQl('query GetAsset($id: Int) {resource(id: $id) {content, preview}}',
                    {id})
   .then(response => response.data?.resource)

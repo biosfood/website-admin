@@ -1,38 +1,38 @@
-import {useGlobalContext} from '@/context'
-import { Card, Text, Container, Spacer, Button, Input} from '@nextui-org/react'
+import { useGlobalContext, ContextState } from '@/context'
+import { Card, Text, Container, Spacer, Button, Input, FormElement } from '@nextui-org/react'
 import {AssetPicker} from '@/assetPicker'
-import {setProfilePicture, login, changePassword as doChangePassword, changeEmail as doChangeEmail} from '@/api'
+import {setProfilePicture, login, changePassword as doChangePassword, changeEmail as doChangeEmail, Resource} from '@/api'
 import { useEffect, useState, useRef } from 'react';
 import Head from 'next/head'
 
-function PasswordChange({context, setContext}) {
+function PasswordChange({context, setContext}: ContextState) {
   const [errorMessage, setErrorMessage] = useState('')
-  const oldPassword = useRef()
-  const password = useRef()
-  const repeatPassword = useRef()
+  const oldPassword = useRef<FormElement>(null)
+  const password = useRef<FormElement>(null)
+  const repeatPassword = useRef<FormElement>(null)
 
   function cancel() {
-    oldPassword.current.value = ''
-    password.current.value = ''
-    repeatPassword.current.value = ''
+    oldPassword.current!.value = ''
+    password.current!.value = ''
+    repeatPassword.current!.value = ''
     setErrorMessage('')
   }
 
   function changePassword() {
-    if (!oldPassword.current.value) {
+    if (!oldPassword.current!.value) {
       setErrorMessage('please enter your current password')
       return
     }
-    if (!password.current.value) {
+    if (!password.current!.value) {
       setErrorMessage('please enter a new password')
       return
     }
-    if (password.current.value != repeatPassword.current.value) {
+    if (password.current!.value != repeatPassword.current!.value) {
       setErrorMessage('please enter your new password twice, exactly the same way')
       return
     }
-    const newPassword = password.current.value
-    login(context, setContext, context.useremail, oldPassword.current.value, false).then(response => {
+    const newPassword = password.current!.value
+    login(context, setContext, context.useremail, oldPassword.current!.value, false).then(response => {
       if (!response.data.login) {
         setErrorMessage('you entered the wrong current password')
         return
@@ -77,20 +77,20 @@ function PasswordChange({context, setContext}) {
   )
 }
 
-function EmailChange({context, setContext}) {
-  const inputRef = useRef()
+function EmailChange({context, setContext}: ContextState) {
+  const inputRef = useRef<FormElement>(null)
   const [errorMessage, setErrorMessage] = useState('')
 
   function cancel() {
-    inputRef.current.value = ''
+    inputRef.current!.value = ''
   }
 
   function changeEmail() {
-    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(inputRef.current.value)) {
+    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(inputRef.current!.value)) {
       setErrorMessage('please enter a vaild email address')
       return
     }
-    doChangeEmail(context, inputRef.current.value).then(success => {
+    doChangeEmail(context, inputRef.current!.value).then(success => {
       if (success) {
         cancel()
         setErrorMessage('email change was successful')
@@ -131,7 +131,7 @@ export default function Settings() {
       <Card>
         <Card.Header><Text h2>Profile picture</Text></Card.Header>
         <Card.Body><AssetPicker selection={context.profilePicture} 
-          onPick={asset => setProfilePicture(context, setContext, asset)} noselect="no profile picture"/>
+          onPick={(resource?: Resource) => setProfilePicture(context, setContext, resource)} noselect="no profile picture"/>
         </Card.Body>
       </Card>
       <Spacer y={1}/>

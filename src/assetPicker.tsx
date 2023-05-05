@@ -8,7 +8,7 @@ import type { Selection } from "@react-types/shared/src/selection"
 
 export function AssetPicker({selection, onPick, children, noselect, resourceType}:
                             {selection?: Resource, onPick: (resource?: Resource) => void, children?: ReactNode,
-                             noselect?: string, resourceType: string}) {
+                             noselect?: string, resourceType?: string}) {
   const {context, setContext} = useGlobalContext()
   const [suggestions, setSuggestions] = useState([])
   const [currentAsset, setCurrentAsset] = useState('')
@@ -32,13 +32,13 @@ export function AssetPicker({selection, onPick, children, noselect, resourceType
     let result: any[] = []
     if (noselect != undefined && noselect != '') {
       result.push(
-        <Dropdown.Section>
+        <Dropdown.Section key="noselect">
           <Dropdown.Item key="0">{noselect}</Dropdown.Item>
         </Dropdown.Section>
       )
     }
     result.push(
-      <Dropdown.Section>
+      <Dropdown.Section key="selections">
         {context.resources.filter((it: Resource) => it.resourceType == resourceType).map((asset:Resource) => (
           <Dropdown.Item key={asset.id}
             icon={resourceType == "image" && <Image src={asset.preview} width={24} alt=""/>}>
@@ -63,7 +63,7 @@ export function AssetPicker({selection, onPick, children, noselect, resourceType
           </Dropdown.Menu>
         </Dropdown>
       </Grid>
-      <Grid xs><Image src={currentAsset} alt="currently selected asset"/></Grid>
+      <Grid xs>{currentAsset && <Image src={currentAsset} alt="currently selected asset"/>}</Grid>
     </Grid.Container>
   )
 }

@@ -11,7 +11,7 @@ interface DataTransferEvent {
   preventDefault: () => any
 }
 
-export function FileDropZone({onFileDrop}: {onFileDrop: (file: File) => void}) {
+export function FileDropZone({onFileDrop, style}: {onFileDrop: (file: File) => void, style?: object}) {
   function onFileInputChange(event: FileDropEvent) {
     event.preventDefault()
     const files = Array.from(event.target?.files!)
@@ -30,6 +30,7 @@ export function FileDropZone({onFileDrop}: {onFileDrop: (file: File) => void}) {
     <Container
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      style={style}
     >
       <input ref={fileInputRef} type='file' accept='image/png, image/jpeg'
         onChange={onFileInputChange} style={{display: 'none'}}/>
