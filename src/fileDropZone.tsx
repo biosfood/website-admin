@@ -1,19 +1,29 @@
 import { Button, Container } from '@nextui-org/react';
-import { useState, useRef } from 'react'
+import React, { useState, useRef, RefObject } from 'react'
 
-export function FileDropZone({onFileDrop, color, highlightColor}) {
-  function onFileInputChange(event) {
+interface FileDropEvent {
+  target: { files?: FileList | undefined | null },
+  preventDefault: () => any
+}
+
+interface DataTransferEvent {
+  dataTransfer: { files?: FileList | undefined | null },
+  preventDefault: () => any
+}
+
+export function FileDropZone({onFileDrop}: {onFileDrop: (file: File) => void}) {
+  function onFileInputChange(event: FileDropEvent) {
     event.preventDefault()
-    const files = Array.from(event.target.files)
-    files.map(file => onFileDrop(file))
+    const files = Array.from(event.target?.files!)
+    files.map((file: File) => onFileDrop(file))
   }
 
-  function onDrop(event) {
+  function onDrop(event: DataTransferEvent) {
     event.preventDefault()
-    Array.from(event.dataTransfer.files).map(file => onFileDrop(file))
+    Array.from(event.dataTransfer.files!).map((file: File) => onFileDrop(file))
   } 
   
-  const fileInputRef = useRef();
+  const fileInputRef = React.createRef<HTMLInputElement>();
   const [hover, setHover] = useState(false)
 
   return (
@@ -24,7 +34,7 @@ export function FileDropZone({onFileDrop, color, highlightColor}) {
       <input ref={fileInputRef} type='file' accept='image/png, image/jpeg'
         onChange={onFileInputChange} style={{display: 'none'}}/>
       <Button bordered rounded color={hover ? "success" : "primary"} size="xl" css={{minHeight: '7em', minWidth: "100%"}}
-        onDrop={onDrop} onPress={() => fileInputRef.current.click()}
+        onDrop={onDrop} onPress={() => fileInputRef.current!.click()}
         onDragOver={event => {event.preventDefault(); setHover(true)}}
         onDragLeave={event => setHover(false)}>
         Upload your images here
