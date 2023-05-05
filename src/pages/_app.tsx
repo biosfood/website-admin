@@ -12,7 +12,7 @@ import { HydrationProvider } from "react-hydration-provider";
 
 const theme = createTheme({type: "dark",})
 
-class Page {
+export class Page {
   target: string
   name: string
 

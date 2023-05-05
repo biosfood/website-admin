@@ -1,10 +1,10 @@
 import { Container, Card, Text } from '@nextui-org/react'
 
 export function Footer() {
-  const alignCenter = {textAlign: 'center'}
+  const alignCenter = {textAlign: 'center' as const}
   return (
-    <Container fluid="true" style={{padding: 0, margin: 0, width: '100vw'}}>
-      <Card fluid="true" style={{width: '100vw', borderRadius: 0}}>
+    <Container fluid style={{padding: 0, margin: 0, width: '100vw'}}>
+      <Card style={{width: '100vw', borderRadius: 0}}>
         <Card.Body style={{...alignCenter, padding: 2}}>
           <Text>&copy; Copyright 2023 Lukas Eisenhauer</Text>
           <Text>Author of this website: Lukas Eisenhauer</Text>
