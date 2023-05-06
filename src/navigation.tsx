@@ -49,7 +49,7 @@ export function Navigation({pages, enforceLogin}: {pages: Page[], enforceLogin?:
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>) : (
-          <Navbar.Link color="secondary" href="/login" aria-label="Log in">Log in</Navbar.Link>
+          <Navbar.Link color="secondary" href="/admin/login" aria-label="Log in">Log in</Navbar.Link>
         )}
       </Navbar.Content>
     </Navbar></Client>

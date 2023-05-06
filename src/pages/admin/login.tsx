@@ -7,6 +7,8 @@ import { useState, useRef } from 'react'
 import { login as doLogin } from '@/api'
 import { useRouter } from "next/router";
 import {useGlobalContext} from '@/context'
+import { useSearchParams } from "react-router-dom";
+import { Client } from "react-hydration-provider";
 
 export default function Login() {
   const router = useRouter()
@@ -31,8 +33,8 @@ export default function Login() {
         setErrorMessage("access denied")
         return
       }
-      setErrorMessage("Success, redirecting...")
-      router.push("/admin/")
+      setErrorMessage(`Success, redirecting to ${router.query['redirect'] || '/admin'}...`)
+      router.push(router.query['redirect'] || '/admin')
     })
   }
 
@@ -58,6 +60,7 @@ export default function Login() {
           >
             Eisenhauer Backend Login
           </Text>
+          <Client>
           <form onSubmit={login}>
             <Input aria-label="email"
               bordered fullWidth
@@ -73,7 +76,8 @@ export default function Login() {
             <Text color="error">{errorMessage}</Text>
             <Spacer y={1} />
             <Button type="submit" css={{width: '100%'}}>Log in</Button>
-        </form>
+          </form>
+          </Client>
         </Card>
       </Container>
     </>

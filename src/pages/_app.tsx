@@ -39,15 +39,11 @@ export default function App({ Component, pageProps }: AppProps) {
         setContext({...context, token: ''})
       } else if (context.token && context.token != '???') {
         localStorage.setItem("token", context.token)
-        updateUserData(context, setContext).then(success => {
-          if (!success && router.pathname.startsWith("/admin")) {
-            router.push("/login")
-          }
-        })
+        updateUserData(context, setContext)
         return
       }
-      if (!context.token && router.pathname.startsWith("/admin")) {
-        router.push("/login")
+      if (!context.token && router.pathname.startsWith("/admin") && !router.pathname.includes("login")) {
+        router.push({pathname: '/admin/login', query: {redirect: router.pathname}})
       }
       if (router.query.slug != undefined && !context.resources.length) {
         getResources(router.query.slug[0]).then(resources => {
