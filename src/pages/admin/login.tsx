@@ -7,7 +7,6 @@ import { useState, useRef } from 'react'
 import { login as doLogin } from '@/api'
 import { useRouter } from "next/router";
 import {useGlobalContext} from '@/context'
-import { useSearchParams } from "react-router-dom";
 import { Client } from "react-hydration-provider";
 
 export default function Login() {
@@ -34,7 +33,7 @@ export default function Login() {
         return
       }
       setErrorMessage(`Success, redirecting to ${router.query['redirect'] || '/admin'}...`)
-      router.push(router.query['redirect'] || '/admin')
+      router.push(router.query['redirect'] as string || '/admin')
     })
   }
 

@@ -1,16 +1,34 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import { Container, Card, Text } from '@nextui-org/react'
+import { Text, Card, Container, Grid, Avatar, Row } from '@nextui-org/react'
+import { findUsers, User } from '@/api'
+import { useState, useEffect } from 'react'
+import { useRouter } from "next/router";
 
 export default function Home() {
+  const [users, setUsers] = useState<User[]>([])
+  const router = useRouter()
+
+  useEffect(() => { findUsers().then((users: User[]) => setUsers(users)) }, [])
+
   return (
     <>
       <Head>
-        <title>Admin Panel</title>
+        <title>Users</title>
       </Head>
-      <Container>
-        <Text h1>Welcome to the Eisenhauer Backend!</Text>
-        <Text>This is where I edit all my websites from. You will need an account to access all the good stuff though.</Text>
+      <Container fluid>
+        <Text h1>Users</Text>
+        <Grid.Container gap={2} justify="center">
+          {users.map((user: User) => (<Grid sm justify="center" alignContent="stretch" alignItems="stretch" css={{width: '100%'}} key={user.name}>
+            <Card isPressable onPress={() => router.push(`/${user.name}`)}>
+              <Card.Body>
+                <Row css={{alignItems: 'center'}}>
+                  <Avatar bordered color="primary" size="xl" text={user.name} src={user.profilePicture?.preview}/>
+                  <Text h3 css={{margin: '15px'}}>{user.name}</Text>
+                </Row>
+              </Card.Body>
+            </Card>
+          </Grid>))}
+        </Grid.Container>
       </Container>
     </>
   )

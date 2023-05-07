@@ -9,7 +9,12 @@ interface Resource {
   resourceType: string,
 }
 
-export type {Resource}
+interface User {
+  name: string,
+  profilePicture?: Resource,
+}
+
+export type {Resource, User}
 
 function doGraphQl(query: string, variables: object) {
   return fetch(`${process.env.api}/graphql`, {
@@ -26,6 +31,24 @@ function processPassword(password: string) {
   const hash = createHash("sha256")
   hash.update(password + "EISENHAUER backend Password")
   return "MD5-" + hash.digest("base64") // ;)
+}
+
+export function findUsers() {
+  return doGraphQl(`
+query Users {
+  users {
+    name
+    profilePicture {
+      id
+      name
+      preview
+      resourceType
+    }
+  }
+}
+`, {}).then(response => {
+    return response.data.users
+  })
 }
 
 export function login(context: Context, setContext: (context: Context) => void, email: string, password: string, updateContext: boolean = true) {
