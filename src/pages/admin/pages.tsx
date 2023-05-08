@@ -94,7 +94,7 @@ function EditPageTemplate({context, setContext}: ContextState) {
   }
 
   const addLink = (resource?: Resource) => insertText((text: string) =>
-    `[${text != "" ? text : (resource?.name || "HERE")}](${resource?.name || "URL"})`)
+    `[${text != "" ? text : (resource?.name || "HERE")}](${'/' + context.username + resource?.name || "URL"})`)
 
   const modal = (
     <Modal closeButton blur open={modalOpen} onClose={() => setModalOpen(false)}

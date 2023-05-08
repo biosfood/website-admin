@@ -17,7 +17,8 @@ export function AssetPicker({selection, onPick, children, noselect, resourceType
     if (selection instanceof String) {
       return
     }
-    const asset = context.resources.find((resource: Resource) => resource.id in (selection as Set<any>))
+    const item = [...selection][0]
+    const asset = context.resources.find((resource: Resource) => item == resource.id)
     asset ? onPick(asset) : onPick(undefined)
   }
 
@@ -58,7 +59,7 @@ export function AssetPicker({selection, onPick, children, noselect, resourceType
             children
           }
           <Dropdown.Menu color="secondary" aria-label="choose an asset" selectionMode="single"
-            disallowEmptySelection onSelectionChange={pick} defaultSelectedKeys={[`${selection ? selection.id : '0'}`]}>
+            disallowEmptySelection onSelectionChange={pick} defaultSelectedKeys={[`${selection ? selection.id : 'none'}`]}>
             {createSections()}
           </Dropdown.Menu>
         </Dropdown>
