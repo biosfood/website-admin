@@ -45,14 +45,6 @@ export default function App({ Component, pageProps }: AppProps) {
       if (!context.token && router.pathname.startsWith("/admin") && !router.pathname.includes("login")) {
         router.push({pathname: '/admin/login', query: {redirect: router.pathname}})
       }
-      if (router.query.slug != undefined && !context.resources.length) {
-        getResources(router.query.slug[0]).then(resources => {
-          if (resources == undefined) {
-            return
-          }
-          setContext({...context, resources})
-        })
-      }
     }
     useEffect(updateContext, [context.token])
 
