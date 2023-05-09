@@ -21,7 +21,9 @@ export function Navigation({pages, enforceLogin}: {pages: Page[], enforceLogin?:
   return (router.pathname.startsWith("/admin") || router.pathname == "/") && (<Client>
     <Navbar variant="floating" isBordered>
       <Navbar.Brand>
-        <Logo/>
+        <Link href="/">
+          <Logo/>
+        </Link>
       </Navbar.Brand>
       <Navbar.Content variant="highlight-rounded">
         {pages.map((page) => 
