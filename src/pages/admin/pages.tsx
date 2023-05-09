@@ -4,9 +4,9 @@ import Head from 'next/head'
 import { PaperPlus, Delete, Edit, Image2, Send } from 'react-iconly'
 import { useEffect, useState, useRef } from 'react'
 import { updateUserData, createArticle, deleteResource, retrieveAsset, updateResource, Resource } from '@/api'
-import ReactMarkdown from 'react-markdown'
 import { AssetPicker } from '@/assetPicker'
 import { Client } from "react-hydration-provider";
+import RenderPage from '@/RenderPage'
 
 function getNextName(title: string, directory: string) {
   const remainder = title.substring(directory.length)
@@ -64,10 +64,6 @@ function CreatePageTemplate({context, setContext}: ContextState) {
   }
 
   return {createPageModal: modal, createPage}
-}
-
-export function RenderPage({content}: {content?: string}) {
-  return (<ReactMarkdown>{content || ''}</ReactMarkdown>)
 }
 
 function EditPageTemplate({context, setContext}: ContextState) {
@@ -134,7 +130,7 @@ function EditPageTemplate({context, setContext}: ContextState) {
           <Text color="error">{error}</Text>
         </div>
         <div style={{display: mode=='view' ? '' : 'none'}}>
-          <RenderPage content={content.current?.value}/>
+          <RenderPage>{content.current?.value}</RenderPage>
         </div>
       </Modal.Body>
       <Modal.Footer style={{display: "flex", justifyContent: "space-between"}}>
