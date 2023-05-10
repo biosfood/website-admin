@@ -1,12 +1,13 @@
 import { useGlobalContext, ContextState } from '@/context'
 import { Container, Text, Card, Button, Modal, Input, Textarea, Navbar, Spacer, Dropdown, FormElement } from '@nextui-org/react';
 import Head from 'next/head'
-import { PaperPlus, Delete, Edit, Image2, Send } from 'react-iconly'
+import { PaperPlus, Delete, Edit, Image2, Send, Show } from 'react-iconly'
 import { useEffect, useState, useRef } from 'react'
 import { updateUserData, createArticle, deleteResource, retrieveAsset, updateResource, Resource } from '@/api'
 import { AssetPicker } from '@/assetPicker'
 import { Client } from "react-hydration-provider";
 import RenderPage from '@/RenderPage'
+import { useRouter } from "next/router";
 
 function getNextName(title: string, directory: string) {
   const remainder = title.substring(directory.length)
@@ -167,12 +168,14 @@ function Page({pageDirectory, context, setContext, createPage, editPage}:
   const children = Array.from(new Set(context.resources.filter(resource => resource.name.startsWith(pageDirectory) && resource.name.length > pageDirectory.length)
                              .map(resource => getNextName(resource.name, pageDirectory))))
   const page = context.resources.find(resource => resource.name == pageDirectory)
+  const router = useRouter()
   return (
     <Card variant="bordered" style={{marginTop: '1em', background: 
         (pageDirectory.slice(0, -1).match(/\//g)|| []).length % 2 ? "var(--nextui-colors-background)" : ""}}>
       <Card.Header style={{display: "flex", justifyContent: "space-between"}}>
         <Text h2>{pageDirectory}</Text>
         {page ? <div style={{display: "flex", flexDirection: "row", gap: '1em'}}>
+          <Button auto color="success" icon={<Show />} onPress={() => router.push('/'+context.username+page.name)}/>
           <Button auto color="error" icon={<Delete />} onPress={() => {
             deleteResource(context, page.id).then(() => updateUserData(context, setContext))}}/>
           <Button auto color="primary" icon={<Edit />} onPress={() => editPage(page)}/>
