@@ -1,14 +1,36 @@
 import { Navigation } from '@/navigation'
-import { Grid, Card, Row, Button, Text, Image as NextImage, Input, Spacer, FormElement } from '@nextui-org/react';
-import { createAsset, deleteResource, updateUserData } from '@/api'
+import { Grid, Card, Row, Button, Text, Image as NextImage, Input, Spacer, FormElement, Modal, Container } from '@nextui-org/react';
+import { createAsset, deleteResource, updateUserData, retrieveAsset, Resource } from '@/api'
 import { useEffect, useState, createRef } from 'react';
 import { FileDropZone } from '@/fileDropZone'
-import { Delete } from 'react-iconly'
+import { Delete, Show } from 'react-iconly'
 import {useGlobalContext} from '@/context'
 import Head from 'next/head'
 
+function ViewModal() {
+  const [modalOpen, setModalOpen] = useState(false)
+  const [src, setSrc] = useState('')
+  const [resource, setResource] = useState<Resource | null>(null)
+
+  function show(resource: Resource) {
+    setResource(resource)
+    setModalOpen(true)
+    retrieveAsset(resource.id).then((data: {content: string}) => setSrc(data.content))
+  }
+
+  const modal = <Modal closeButton blur open={modalOpen}
+    onClose={() => {setModalOpen(false); setResource(null); setSrc('')}}>
+      <Modal.Header><Text h2>{resource?.name}</Text></Modal.Header>
+      <Modal.Body>
+        <NextImage src={src}/>
+      </Modal.Body>
+    </Modal>
+  return {modal, show}
+}
+
 export default function Assets() {
   const {context, setContext} = useGlobalContext()
+  const {modal, show} = ViewModal()
   
   const [filesToProcess, setFiles] = useState(new Array<File>())
   function onFileDrop(file: File) {
@@ -75,21 +97,25 @@ export default function Assets() {
       <Head>
         <title>Assets</title>
       </Head>
+      {modal}
       <Grid.Container gap={2} justify="center">
         <Grid md id={"FILE"}>
           <File style={{width: '100%'}}/>
         </Grid>
-        {context.resources.filter(resource => resource.resourceType == 'image').map((asset) => (
-            <Grid md key={"ASSET-"+asset.id} style={{width: '100%'}}>
+        {context.resources.filter(resource => resource.resourceType == 'image').map(resource => (
+            <Grid md key={resource.id} style={{width: '100%'}}>
               <Card>
                 <Card.Header style={{display: 'flex', justifyContent: 'space-between'}}>
-                  <Text h3>{asset.name}</Text>
-                  <Button auto color="error" icon={<Delete />} onPress={() => {
-                    deleteResource(context, asset.id).then(() => updateUserData(context, setContext))
-                  }}/>
+                  <Text h3>{resource.name}</Text>
+                  <div style={{display: "flex", flexDirection: "row", gap: '1em'}}>
+                    <Button auto color="success" icon={<Show />} onPress={() => show(resource)}/>
+                    <Button auto color="error" icon={<Delete />} onPress={() => {
+                      deleteResource(context, resource.id).then(() => updateUserData(context, setContext))
+                    }}/>
+                  </div>
                 </Card.Header>
                 <Card.Body>
-                  <NextImage src={asset.preview} width={128} height={128} css={{scale: 2}}/>
+                  <NextImage src={resource.preview} width={128} height={128} css={{scale: 2}}/>
                 </Card.Body>
               </Card>
             </Grid>))}
