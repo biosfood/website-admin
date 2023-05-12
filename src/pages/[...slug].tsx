@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from 'react'
 import { retrieveAsset, Resource, getResources } from '@/api'
 import RenderPage from '@/RenderPage'
+import Head from 'next/head'
 
 export default function Page() {
   const {context, setContext} = useGlobalContext()
@@ -25,5 +26,8 @@ export default function Page() {
     main()
   }, [router.query.slug])
 
-  return (<div style={{margin: 10}}><RenderPage>{content}</RenderPage></div>)
+  return (
+    <>
+      <div style={{margin: 10}}><RenderPage>{content}</RenderPage></div>
+    </>)
 }
