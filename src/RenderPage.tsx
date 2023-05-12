@@ -36,10 +36,11 @@ export default function RenderPage({children}: {children: ReactNode}) {
       },
       title: ({node, ...props}: {node: any}) => <Head><title {...props}/></Head>,
       img: ({node, alt, src, ...props}: {node: any, alt: string, src: string}) => {
+        const realSrc = src.startsWith("resource?id=") ? `${process.env.api}/${src}` : src
         if (alt == "favicon") {
-          return <Head><link rel="icon" type="image/x-icon" href={src} /></Head>
+          return <Head><link rel="icon" type="image/x-icon" href={realSrc} /></Head>
         }
-        return <img src={src} alt={alt}/>
+        return <img src={realSrc} alt={alt}/>
       },
     } as {a: any,  table: any}}
     rehypePlugins={[rehypeRaw]}

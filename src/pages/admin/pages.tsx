@@ -87,7 +87,7 @@ function EditPageTemplate({context, setContext}: ContextState) {
     if (!resource) {
       return
     }
-    insertText((text: string) => `![${text}](${process.env.api}/resource?id=${resource?.id})`)
+    insertText((text: string) => `![${text}](resource?id=${resource?.id})`)
   }
 
   const addLink = (resource?: Resource) => insertText((text: string) =>
