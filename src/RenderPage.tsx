@@ -3,7 +3,7 @@ import { useEffect, useState, ReactNode } from 'react'
 import Link from 'next/link'
 import rehypeRaw from 'rehype-raw'
 import remarkGfm from 'remark-gfm'
-import { Card, Table } from '@nextui-org/react';
+import { Card, Table, Image } from '@nextui-org/react';
 import Head from 'next/head'
 
 export default function RenderPage({children}: {children: ReactNode}) {
@@ -34,7 +34,13 @@ export default function RenderPage({children}: {children: ReactNode}) {
           {body}
         </Table>
       },
-      title: ({node, ...props}: {node: any}) => <Head><title {...props}/></Head>
+      title: ({node, ...props}: {node: any}) => <Head><title {...props}/></Head>,
+      img: ({node, alt, src, ...props}: {node: any, alt: string, src: string}) => {
+        if (alt == "favicon") {
+          return <Head><link rel="icon" type="image/x-icon" href={src} /></Head>
+        }
+        return <img src={src} alt={alt}/>
+      },
     } as {a: any,  table: any}}
     rehypePlugins={[rehypeRaw]}
     remarkPlugins={[remarkGfm]}>
