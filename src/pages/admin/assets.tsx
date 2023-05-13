@@ -1,7 +1,7 @@
 import { Navigation } from '@/navigation'
 import { Grid, Card, Row, Button, Text, Image as NextImage, Input, Spacer, FormElement, Modal, Container } from '@nextui-org/react';
 import { createAsset, deleteResource, updateUserData, retrieveAsset, Resource } from '@/api'
-import { useEffect, useState, createRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { FileDropZone } from '@/fileDropZone'
 import { Delete, Show } from 'react-iconly'
 import {useGlobalContext} from '@/context'
@@ -52,7 +52,7 @@ export default function Assets() {
 
   function File({style}: {style?: object}) {
     const [imageSource, setImageSource] = useState('')
-    const titleRef = createRef<FormElement>()
+    const titleRef = useRef<FormElement>(null)
     if (!filesToProcess.length) {
       return (<FileDropZone onFileDrop={onFileDrop} style={style}/>)
     } else {
@@ -84,7 +84,7 @@ export default function Assets() {
           <Card.Footer style={{display: "flex", justifyContent: "space-between"}}>
             <Button size="sm" light color="error" onPress={endUpload}>Cancel Upload</Button>
             <Button size="sm" color="primary"
-              onPress={() => upload(titleRef.current!.value, imageSource, reader.result! as string)}>
+              onPress={() => upload(titleRef!.current!.value, imageSource, reader.result! as string)}>
                 Upload Image
             </Button>
           </Card.Footer>
