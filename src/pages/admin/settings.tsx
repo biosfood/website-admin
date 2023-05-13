@@ -1,5 +1,5 @@
 import { useGlobalContext, ContextState } from '@/context'
-import { Card, Text, Container, Spacer, Button, Input, FormElement } from '@nextui-org/react'
+import { Card, Text, Container, Spacer, Button, Input, FormElement, Grid } from '@nextui-org/react'
 import {AssetPicker} from '@/assetPicker'
 import {setProfilePicture, login, changePassword as doChangePassword, changeEmail as doChangeEmail, Resource} from '@/api'
 import { useEffect, useState, useRef } from 'react';
@@ -48,6 +48,7 @@ function PasswordChange({context, setContext}: ContextState) {
       })
     })
   }
+  const widthCss = {minWidth: '20em', width: '100%'}
 
   return (
     <>
@@ -57,14 +58,20 @@ function PasswordChange({context, setContext}: ContextState) {
     <Card>
       <Card.Header><Text h2>Change password</Text></Card.Header>
       <Card.Body>
-        <Container style={{display: "flex", justifyContent: "space-around"}}>
-          <Input ref={oldPassword} aria-label="current password" bordered type="password" color="primary" size="xl"
-            placeholder="Current password" clearable/>
-          <Input ref={password} aria-label="new password" bordered type="password" color="primary" size="xl"
-            placeholder="New password" clearable/>
+        <Grid.Container gap={1}>
+          <Grid xs css={widthCss}>
+            <Input ref={oldPassword} aria-label="current password" bordered type="password" color="primary" size="xl"
+              placeholder="Current password" clearable css={widthCss}/>
+          </Grid>
+          <Grid xs css={widthCss}>
+            <Input ref={password} aria-label="new password" bordered type="password" color="primary" size="xl"
+              placeholder="New password" clearable css={widthCss}/>
+            </Grid>
+          <Grid xs css={widthCss}>
           <Input ref={repeatPassword} aria-label="repeat new password" bordered type="password" color="primary" size="xl"
-            placeholder="Repeat new password" clearable/>
-        </Container>
+            placeholder="Repeat new password" clearable css={widthCss}/>
+          </Grid>
+        </Grid.Container>
         <Spacer y={1}/>
         <Text color="error">{errorMessage}</Text>
       </Card.Body>
@@ -124,17 +131,22 @@ export default function Settings() {
   return (
     <Container>
       <Text h1>Settings</Text>
-      <EmailChange context={context} setContext={setContext}/>
-      <Spacer y={1}/>
-      <PasswordChange context={context} setContext={setContext}/>
-      <Spacer y={1}/>
-      <Card>
-        <Card.Header><Text h2>Profile picture</Text></Card.Header>
-        <Card.Body><AssetPicker selection={context.profilePicture} 
-          onPick={(resource?: Resource) => setProfilePicture(context, setContext, resource)} noselect="no profile picture"/>
-        </Card.Body>
-      </Card>
-      <Spacer y={1}/>
+      <Grid.Container gap={1}>
+        <Grid sm css={{width: '100%'}}>
+          <EmailChange context={context} setContext={setContext}/>
+        </Grid>
+        <Grid sm css={{width: '100%'}}>
+          <PasswordChange context={context} setContext={setContext}/>
+        </Grid>
+        <Grid sm css={{width: '100%'}}>
+        <Card>
+            <Card.Header><Text h2>Profile picture</Text></Card.Header>
+            <Card.Body><AssetPicker selection={context.profilePicture} 
+              onPick={(resource?: Resource) => setProfilePicture(context, setContext, resource)} noselect="no profile picture"/>
+            </Card.Body>
+          </Card>
+        </Grid>
+      </Grid.Container>
     </Container>
   )
 }

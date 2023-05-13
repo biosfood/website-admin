@@ -64,7 +64,7 @@ export function AssetPicker({selection, onPick, children, noselect, resourceType
           </Dropdown.Menu>
         </Dropdown>
       </Grid>
-      <Grid xs>{currentAsset && <Image src={currentAsset} alt="currently selected asset"/>}</Grid>
+      <Grid xs>{currentAsset && <Image src={currentAsset} alt="currently selected asset" width={100} height={100}/>}</Grid>
     </Grid.Container>
   )
 }
