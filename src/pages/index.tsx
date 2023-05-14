@@ -1,35 +1,29 @@
-import Head from 'next/head'
-import { Text, Card, Container, Grid, Avatar, Row } from '@nextui-org/react'
-import { findUsers, User } from '@/api'
-import { useState, useEffect } from 'react'
+import { Text } from '@nextui-org/react'
+import { useGlobalContext } from '@/context'
 import { useRouter } from "next/router";
+import { useState, useEffect } from 'react'
+import { retrieveAsset, Resource, getResources } from '@/api'
+import RenderPage from '@/RenderPage'
+import Head from 'next/head'
 
-export default function Home() {
-  const [users, setUsers] = useState<User[]>([])
+export default function Page() {
+  const {context, setContext} = useGlobalContext()
   const router = useRouter()
-
-  useEffect(() => { findUsers().then((users: User[]) => setUsers(users)) }, [])
+  const [content, setContent] = useState("")
+  useEffect(() => {
+    const main = async () => {
+      const resources = await getResources(process.env.rootUser)
+      const resourceName = "/"
+      const resource = resources.find((resource: Resource) => resource.name == resourceName)
+      if (resource) {
+        retrieveAsset(resource.id).then((resource: {content: string}) => setContent(resource?.content))
+      }
+    }
+    main()
+  }, [router.query.slug])
 
   return (
     <>
-      <Head>
-        <title>Users</title>
-      </Head>
-      <Container fluid>
-        <Text h1>Users</Text>
-        <Grid.Container gap={2} justify="center">
-          {users.map((user: User) => (<Grid sm justify="center" alignContent="stretch" alignItems="stretch" css={{width: '100%'}} key={user.name}>
-            <Card isPressable onPress={() => router.push(`/${user.name}`)}>
-              <Card.Body>
-                <Row css={{alignItems: 'center'}}>
-                  <Avatar bordered color="primary" size="xl" text={user.name} src={user.profilePicture?.preview}/>
-                  <Text h3 css={{margin: '15px'}}>{user.name}</Text>
-                </Row>
-              </Card.Body>
-            </Card>
-          </Grid>))}
-        </Grid.Container>
-      </Container>
-    </>
-  )
+      <div style={{margin: 10}}><RenderPage>{content}</RenderPage></div>
+    </>)
 }

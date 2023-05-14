@@ -16,8 +16,8 @@ export default function Page() {
       if (!slug) {
         return
       }
-      const resources = await getResources(process.env.rootUser)
-      const resourceName = slug instanceof Array ? "/" + slug.join("/") : slug
+      const resources = await getResources(slug[0])
+      const resourceName = slug instanceof Array ? "/" + slug.slice(1).join("/") : "/"
       const resource = resources.find((resource: Resource) => resource.name == resourceName)
       if (resource) {
         retrieveAsset(resource.id).then((resource: {content: string}) => setContent(resource?.content))
