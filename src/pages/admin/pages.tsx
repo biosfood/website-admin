@@ -175,7 +175,7 @@ function Page({pageDirectory, context, setContext, createPage, editPage}:
       <Card.Header style={{display: "flex", justifyContent: "space-between"}}>
         <Text h2>{pageDirectory}</Text>
         {page ? <div style={{display: "flex", flexDirection: "row", gap: '1em'}}>
-          <Button auto color="success" icon={<Show />} onPress={() => router.push('/'+context.username+page.name)}/>
+          <Button auto color="success" icon={<Show />} onPress={() => router.push('/users/'+context.username+page.name)}/>
           <Button auto color="error" icon={<Delete />} onPress={() => {
             deleteResource(context, page.id).then(() => updateUserData(context, setContext))}}/>
           <Button auto color="primary" icon={<Edit />} onPress={() => editPage(page)}/>

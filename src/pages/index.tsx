@@ -24,6 +24,6 @@ export default function Page() {
 
   return (
     <>
-      <div style={{margin: 10}}><RenderPage>{content}</RenderPage></div>
+      <div style={{margin: 10}}><RenderPage username={process.env.rootUser}>{content}</RenderPage></div>
     </>)
 }
