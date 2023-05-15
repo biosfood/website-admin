@@ -16,12 +16,12 @@ const processHref = (href: string, username: string) => {
   return href
 }
 
-export default function RenderPage({children, username}: {children: ReactNode, username: string}) {
+export default function RenderPage({children, username, onNavigate}: {children: ReactNode, username: string, onNavigate?: () => void}) {
   return (
   <ReactMarkdown
     components={{
       a: ({node, href, ...props}: {node: any, href?: string}) => {
-        return <Link {...props} href={processHref(href!, username)}/>
+        return <Link {...props} href={processHref(href!, username)} onClick={onNavigate}/>
       },
       card: ({node, ...props}: {node: any}) => <Card><Card.Body {...props}/></Card>,
       table: ({node, children, ...props}: {node: any, children: ReactNode}) => {

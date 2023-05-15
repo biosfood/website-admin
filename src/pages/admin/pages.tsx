@@ -100,6 +100,11 @@ function EditPageTemplate({context, setContext}: ContextState) {
     return `/users/${context.username}${resource.name}`
   }
 
+  function finishEditPage() {
+    updateResource(context, setContext, pageToEdit!.id, preview.current!.value, content.current!.value)
+    .then(() =>setModalOpen(false))
+  }
+
   const addLink = (resource?: Resource) => insertText((text: string) => 
     `[${text != "" ? text : (resource?.name || "HERE")}](${createHref(resource)})`)
 
@@ -141,7 +146,7 @@ function EditPageTemplate({context, setContext}: ContextState) {
           <Text color="error">{error}</Text>
         </div>
         <div style={{display: mode=='view' ? '' : 'none'}}>
-          <RenderPage>{content.current?.value}</RenderPage>
+          <RenderPage username={context.username} onNavigate={finishEditPage}>{content.current?.value}</RenderPage>
         </div>
       </Modal.Body>
       <Modal.Footer style={{display: "flex", justifyContent: "space-between"}}>
@@ -165,11 +170,6 @@ function EditPageTemplate({context, setContext}: ContextState) {
     })
   }
   
-  function finishEditPage() {
-    updateResource(context, setContext, pageToEdit!.id, preview.current!.value, content.current!.value)
-    .then(() =>setModalOpen(false))
-  }
-
   return {editPageModal: modal, editPage}
 }
 
