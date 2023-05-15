@@ -90,8 +90,18 @@ function EditPageTemplate({context, setContext}: ContextState) {
     insertText((text: string) => `![${text}](resource?id=${resource?.id})`)
   }
 
-  const addLink = (resource?: Resource) => insertText((text: string) =>
-    `[${text != "" ? text : (resource?.name || "HERE")}](${'/' + context.username + resource?.name || "URL"})`)
+  function createHref(resource?: Resource) {
+    if (!resource) {
+      return "URL"
+    }
+    if (context.username == process.env.rootUser) {
+      return resource.name
+    }
+    return `/users/${context.username}${resource.name}`
+  }
+
+  const addLink = (resource?: Resource) => insertText((text: string) => 
+    `[${text != "" ? text : (resource?.name || "HERE")}](${createHref(resource)})`)
 
   const modal = (
     <Modal closeButton blur open={modalOpen} onClose={() => setModalOpen(false)}
