@@ -16,7 +16,7 @@ export default function Page() {
       if (!slug) {
         return
       }
-      const resources = await getResources(process.env.rootUser)
+      const resources = await getResources(process.env.rootUser!)
       const resourceName = slug instanceof Array ? "/" + slug.join("/") : slug
       const resource = resources.find((resource: Resource) => resource.name == resourceName)
       if (resource) {
@@ -28,6 +28,6 @@ export default function Page() {
 
   return (
     <>
-      <div style={{margin: 10}}><RenderPage username={process.env.rootUser}>{content}</RenderPage></div>
+      <div style={{margin: 10}}><RenderPage username={process.env.rootUser!}>{content}</RenderPage></div>
     </>)
 }

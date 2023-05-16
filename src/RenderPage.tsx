@@ -50,7 +50,7 @@ export default function RenderPage({children, username, onNavigate}: {children: 
         if (alt == "favicon") {
           return <Head><link rel="icon" type="image/x-icon" href={realSrc} /></Head>
         }
-        return <img src={realSrc} alt={alt}/>
+        return <Image src={realSrc} alt={alt}/>
       },
     } as {a: any,  table: any}}
     rehypePlugins={[rehypeRaw]}
