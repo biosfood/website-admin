@@ -6,6 +6,7 @@ import { FileDropZone } from '@/fileDropZone'
 import { Delete, Show } from 'react-iconly'
 import {useGlobalContext} from '@/context'
 import Head from 'next/head'
+import { Client } from "react-hydration-provider";
 
 function ViewModal() {
   const [modalOpen, setModalOpen] = useState(false)
@@ -74,9 +75,11 @@ export default function Assets() {
         <Card style={style}>
           <Card.Header><Text h2>Add file</Text></Card.Header>
           <Card.Body>
-            <Input aria-label="title"
-              bordered fullWidth ref={titleRef}
-              color="secondary" size="lg" placeholder="Title"/>
+            <Client>
+              <Input aria-label="title"
+                bordered fullWidth ref={titleRef}
+                color="secondary" size="lg" placeholder="Title"/>
+            </Client>
             <Spacer y={1} />
             <Text h3>Preview:</Text>
             <NextImage src={imageSource} width={256} height={256} css={{scale: 4}}/>

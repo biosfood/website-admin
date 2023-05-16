@@ -60,22 +60,22 @@ export default function Login() {
             Eisenhauer Backend Login
           </Text>
           <Client>
-          <form onSubmit={login}>
-            <Input aria-label="email"
-              bordered fullWidth
-              color="primary" size="lg" placeholder="Email"
-              ref={email}
-            />
-            <Spacer y={1} />
-            <Input aria-label="password" bordered fullWidth 
-              type="password" color="primary" size="lg" placeholder="Password"
-              ref={password}
-            />
-            <Spacer y={1} />
-            <Text color="error">{errorMessage}</Text>
-            <Spacer y={1} />
-            <Button type="submit" css={{width: '100%'}}>Log in</Button>
-          </form>
+            <form onSubmit={login}>
+              <Input aria-label="email"
+                bordered fullWidth
+                color="primary" size="lg" placeholder="Email"
+                ref={email}
+              />
+              <Spacer y={1} />
+              <Input aria-label="password" bordered fullWidth 
+                type="password" color="primary" size="lg" placeholder="Password"
+                ref={password}
+              />
+              <Spacer y={1} />
+              <Text color="error">{errorMessage}</Text>
+              <Spacer y={1} />
+              <Button type="submit" css={{width: '100%'}}>Log in</Button>
+            </form>
           </Client>
         </Card>
       </Container>

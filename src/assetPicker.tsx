@@ -1,10 +1,11 @@
 import {useGlobalContext} from '@/context'
-import { Card, Text, Container, Spacer, Image, Input, Dropdown, Button, Grid } from '@nextui-org/react'
+import { Card, Text, Container, Spacer, Image, Dropdown, Button, Grid } from '@nextui-org/react'
 import { useEffect, useState, ReactNode } from 'react'
 import { retrieveAsset } from '@/api'
 import { CloseSquare } from 'react-iconly'
 import type { Resource } from '@/api'
 import type { Selection } from "@react-types/shared/src/selection"
+import { Client } from "react-hydration-provider";
 
 export function AssetPicker({selection, onPick, children, noselect, resourceType}:
                             {selection?: Resource, onPick: (resource?: Resource) => void, children?: ReactNode,
@@ -53,6 +54,7 @@ export function AssetPicker({selection, onPick, children, noselect, resourceType
   return (
     <Grid.Container>
       <Grid xs>
+        <Client>
         <Dropdown>
           {children == undefined ? (<Dropdown.Button
             flat color="secondary"> {selection ? selection.name : "Choose profile picture"} </Dropdown.Button>) :
@@ -63,6 +65,7 @@ export function AssetPicker({selection, onPick, children, noselect, resourceType
             {createSections()}
           </Dropdown.Menu>
         </Dropdown>
+        </Client>
       </Grid>
       <Grid xs>{currentAsset && <Image src={currentAsset} alt="currently selected asset" width={100} height={100}/>}</Grid>
     </Grid.Container>

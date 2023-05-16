@@ -1,5 +1,5 @@
 import type { AppProps } from 'next/app'
-import { createTheme, NextUIProvider, useSSR } from "@nextui-org/react"
+import { createTheme, NextUIProvider } from "@nextui-org/react"
 import { useGlobalContext } from '@/context'
 import { ContextProvider } from '@/ContextProvider'
 import { Navigation } from "@/navigation"
@@ -63,15 +63,14 @@ export default function App({ Component, pageProps }: AppProps) {
       </div>
     )
   }
-  const { isBrowser } = useSSR()
 
-  return isBrowser && ( 
-    <HydrationProvider>
-      <NextUIProvider theme={theme}>
+  return ( 
+    <NextUIProvider theme={theme}>
+      <HydrationProvider>
         <ContextProvider>
           <MainPage />
         </ContextProvider>
-      </NextUIProvider>
-    </HydrationProvider>
+      </HydrationProvider>
+    </NextUIProvider>
   )
 }

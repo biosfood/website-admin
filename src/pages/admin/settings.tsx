@@ -4,6 +4,7 @@ import {AssetPicker} from '@/assetPicker'
 import {setProfilePicture, login, changePassword as doChangePassword, changeEmail as doChangeEmail, Resource} from '@/api'
 import { useEffect, useState, useRef } from 'react';
 import Head from 'next/head'
+import { Client } from "react-hydration-provider";
 
 function PasswordChange({context, setContext}: ContextState) {
   const [errorMessage, setErrorMessage] = useState('')
@@ -129,6 +130,7 @@ export default function Settings() {
   const { context, setContext} = useGlobalContext();
 
   return (
+  <Client>
     <Container>
       <Text h1>Settings</Text>
       <Grid.Container gap={1}>
@@ -148,5 +150,6 @@ export default function Settings() {
         </Grid>
       </Grid.Container>
     </Container>
+  </Client>
   )
 }
