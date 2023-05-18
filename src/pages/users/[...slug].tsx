@@ -2,38 +2,25 @@ import { Text } from '@nextui-org/react'
 import { useGlobalContext } from '@/context'
 import { useRouter } from "next/router";
 import { useState, useEffect } from 'react'
-import { retrieveAsset, Resource, getResources } from '@/api'
+import { getContentServerside } from '@/api'
 import RenderPage from '@/RenderPage'
 import Head from 'next/head'
+import { Client } from "react-hydration-provider";
 
-export default function Page() {
-  const {context, setContext} = useGlobalContext()
-  const router = useRouter()
-  const [content, setContent] = useState("")
-  const [username, setUsername] = useState("")
-
-  useEffect(() => {
-    const main = async () => {
-      const slug = router.query.slug
-      if (!slug) {
-        return
-      }
-      if (slug[0] == process.env.rootUser) {
-        router.replace(slug instanceof Array ? "/" + slug.slice(1).join("/") : "/")
-      }
-      setUsername(slug[0])
-      const resources = await getResources(slug[0])
-      const resourceName = slug instanceof Array ? "/" + slug.slice(1).join("/") : "/"
-      const resource = resources.find((resource: Resource) => resource.name == resourceName)
-      if (resource) {
-        retrieveAsset(resource.id).then((resource: {content: string}) => setContent(resource?.content))
-      }
-    }
-    main()
-  }, [router.query.slug])
-
+export default function Page({content, username}: {content: string, username: string}) {
   return (
-    <>
+    <Client>
       <div style={{margin: 10}}><RenderPage username={username}>{content}</RenderPage></div>
-    </>)
+    </Client>
+  )
+}
+
+export async function getServerSideProps({params}: {params: {slug: string[]}}) {
+  // TODO: redirect to /[slug] if user == rootUser
+  const username = params.slug[0]
+  const content = await getContentServerside(username, "/" + params.slug.slice(1).join("/"))
+  if (!content) {
+    // Show error message or redirect?
+  }
+  return { props: { content, username } }
 }

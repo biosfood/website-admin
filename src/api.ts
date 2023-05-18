@@ -150,3 +150,17 @@ export function getResources(username: string) {
     return response?.data?.resources
   })
 }
+
+export async function getContentServerside(username: string, name: string) {
+  return await fetch(`${process.env.api}/graphql`, {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: JSON.stringify({
+      query: "query ResourceByName($username: String, $name: String) { resourceByName(username: $username, name: $name) {content} }",
+      variables: {username, name}
+    })
+  }).then(async res => res.json().then(data => data.data?.resourceByName?.content))
+}

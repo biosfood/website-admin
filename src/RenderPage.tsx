@@ -52,11 +52,11 @@ export default function RenderPage({children, username, onNavigate}: {children: 
         }
         return <img src={realSrc} alt={alt}/>
       },
-      p: ({node, children, ...props}: {node: any, children: ReactNode}) => {
+      p: ({node, children, ...props}: {node: any, children: {type?: {name: string}}[]}) => {
         if (children[0].type?.name == "img") {
-          return <div>{children}</div>
+          return <div>{children as ReactNode}</div>
         }
-        return <Text {...props}>{children}</Text>
+        return <Text {...props}>{children as ReactNode}</Text>
       },
     } as {a: any,  table: any}}
     rehypePlugins={[rehypeRaw]}
