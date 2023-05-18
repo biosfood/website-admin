@@ -3,7 +3,7 @@ import { useEffect, useState, ReactNode } from 'react'
 import Link from 'next/link'
 import rehypeRaw from 'rehype-raw'
 import remarkGfm from 'remark-gfm'
-import { Card, Table, Image } from '@nextui-org/react';
+import { Card, Table, Image, Text } from '@nextui-org/react';
 import Head from 'next/head'
 
 const processHref = (href: string, username: string) => {
@@ -50,7 +50,13 @@ export default function RenderPage({children, username, onNavigate}: {children: 
         if (alt == "favicon") {
           return <Head><link rel="icon" type="image/x-icon" href={realSrc} /></Head>
         }
-        return <Image src={realSrc} alt={alt}/>
+        return <img src={realSrc} alt={alt}/>
+      },
+      p: ({node, children, ...props}: {node: any, children: ReactNode}) => {
+        if (children[0].type?.name == "img") {
+          return <div>{children}</div>
+        }
+        return <Text {...props}>{children}</Text>
       },
     } as {a: any,  table: any}}
     rehypePlugins={[rehypeRaw]}
