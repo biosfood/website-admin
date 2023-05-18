@@ -17,7 +17,7 @@ interface User {
 export type {Resource, User}
 
 function doGraphQl(query: string, variables: object) {
-  return fetch(`${process.env.api}/graphql`, {
+  return fetch("/api/graphql", {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
