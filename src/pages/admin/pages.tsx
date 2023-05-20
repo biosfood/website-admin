@@ -4,9 +4,8 @@ import Head from 'next/head'
 import { PaperPlus, Delete, Edit, Image2, Send, Show } from 'react-iconly'
 import { useEffect, useState, useRef } from 'react'
 import { updateUserData, createArticle, deleteResource, retrieveAsset, updateResource, Resource } from '@/api'
-import { AssetPicker } from '@/assetPicker'
+import { AssetPicker, RenderPage } from '@/components'
 import { Client } from "react-hydration-provider";
-import RenderPage from '@/RenderPage'
 import { useRouter } from "next/router";
 
 function getNextName(title: string, directory: string) {

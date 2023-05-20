@@ -1,6 +1,6 @@
 import { Container, Card, Text } from '@nextui-org/react'
 
-export function Footer() {
+export default function Footer() {
   const alignCenter = {textAlign: 'center' as const}
   return (
     <Container fluid style={{padding: 0, margin: 0, width: '100vw'}}>

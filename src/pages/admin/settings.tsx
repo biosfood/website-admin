@@ -1,6 +1,6 @@
 import { useGlobalContext, ContextState } from '@/context'
 import { Card, Text, Container, Spacer, Button, Input, FormElement, Grid } from '@nextui-org/react'
-import {AssetPicker} from '@/assetPicker'
+import { AssetPicker } from '@/components'
 import {setProfilePicture, login, changePassword as doChangePassword, changeEmail as doChangeEmail, Resource} from '@/api'
 import { useEffect, useState, useRef } from 'react';
 import Head from 'next/head'

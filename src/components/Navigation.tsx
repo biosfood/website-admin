@@ -4,11 +4,11 @@ import { useState, useRef, useId, Key } from 'react'
 import { logout } from '@/api'
 import { useRouter } from "next/router";
 import Link from 'next/link'
-import {Logo} from '@/logo'
 import { Client } from "react-hydration-provider";
 import { Page } from '@/pages/_app'
+import { Logo } from '@/components'
 
-export function Navigation({pages, enforceLogin}: {pages: Page[], enforceLogin?: boolean}) {
+export default function Navigation({pages, enforceLogin}: {pages: Page[], enforceLogin?: boolean}) {
   const {context, setContext} = useGlobalContext()
   const router = useRouter()
 

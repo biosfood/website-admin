@@ -1,7 +1,7 @@
 const stroke = '#FFF'
 const strokeWidth = 16
 
-export function Logo() {
+export default function Logo() {
   return (
     <svg viewBox={`${-strokeWidth/2} ${-strokeWidth/2} ${200+strokeWidth} ${200+strokeWidth/2}`}
         width={200+strokeWidth} height={200+strokeWidth} style={{maxWidth: '2em'}}>

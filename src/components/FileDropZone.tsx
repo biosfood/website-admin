@@ -11,7 +11,7 @@ interface DataTransferEvent {
   preventDefault: () => any
 }
 
-export function FileDropZone({onFileDrop, style}: {onFileDrop: (file: File) => void, style?: object}) {
+export default function FileDropZone({onFileDrop, style}: {onFileDrop: (file: File) => void, style?: object}) {
   function onFileInputChange(event: FileDropEvent) {
     event.preventDefault()
     const files = Array.from(event.target?.files!)

@@ -1,12 +1,11 @@
-import { Navigation } from '@/navigation'
 import { Grid, Card, Row, Button, Text, Image as NextImage, Input, Spacer, FormElement, Modal, Container } from '@nextui-org/react';
 import { createAsset, deleteResource, updateUserData, retrieveAsset, Resource } from '@/api'
 import { useEffect, useState, useRef } from 'react';
-import { FileDropZone } from '@/fileDropZone'
 import { Delete, Show } from 'react-iconly'
 import {useGlobalContext} from '@/context'
 import Head from 'next/head'
 import { Client } from "react-hydration-provider";
+import { FileDropZone } from '@/components'
 
 function ViewModal() {
   const [modalOpen, setModalOpen] = useState(false)

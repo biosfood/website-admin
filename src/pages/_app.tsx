@@ -1,13 +1,11 @@
 import type { AppProps } from 'next/app'
 import { createTheme, NextUIProvider } from "@nextui-org/react"
 import { useGlobalContext } from '@/context'
-import { ContextProvider } from '@/ContextProvider'
-import { Navigation } from "@/navigation"
 import { useEffect } from 'react'
 import { useRouter } from "next/router";
 import { updateUserData, getResources } from '@/api'
-import { Footer } from '@/footer'
 import { HydrationProvider } from "react-hydration-provider";
+import { Navigation, Footer, ContextProvider } from "@/components"
 
 const theme = createTheme({type: "dark",})
 
@@ -28,6 +26,7 @@ export const adminPages = [
 ]
 
 export default function App({ Component, pageProps }: AppProps) {
+  console.log(Navigation)
   function MainPage( ) {
     const {context, setContext} = useGlobalContext()
     const router = useRouter()

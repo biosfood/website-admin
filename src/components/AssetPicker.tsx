@@ -7,7 +7,7 @@ import type { Resource } from '@/api'
 import type { Selection } from "@react-types/shared/src/selection"
 import { Client } from "react-hydration-provider";
 
-export function AssetPicker({selection, onPick, children, noselect, resourceType}:
+export default function AssetPicker({selection, onPick, children, noselect, resourceType}:
                             {selection?: Resource, onPick: (resource?: Resource) => void, children?: ReactNode,
                              noselect?: string, resourceType?: string}) {
   const {context, setContext} = useGlobalContext()
