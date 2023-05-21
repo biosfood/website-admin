@@ -58,6 +58,7 @@ export default function RenderPage({children, username, onNavigate}: {children: 
         }
         return <Text {...props}>{children as ReactNode}</Text>
       },
+      h1: ({node, ...props}: {node: any}) => <Text h1 {...props} style={{textAlign: "center", fontSize: "5em", margin: "1em"}}/>,
     } as {a: any,  table: any}}
     rehypePlugins={[rehypeRaw]}
     remarkPlugins={[remarkGfm]}>
