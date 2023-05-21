@@ -26,7 +26,6 @@ export const adminPages = [
 ]
 
 export default function App({ Component, pageProps }: AppProps) {
-  console.log(Navigation)
   function MainPage( ) {
     const {context, setContext} = useGlobalContext()
     const router = useRouter()

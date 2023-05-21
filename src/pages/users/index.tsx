@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import { Text, Card, Container, Grid, Avatar, Row } from '@nextui-org/react'
-import { findUsersServerside, User } from '@/api'
+import { findUsers, User } from '@/api'
 import { useState, useEffect } from 'react'
 import { useRouter } from "next/router";
 
@@ -32,6 +32,6 @@ export default function Home({users}: {users: User[]}) {
 }
 
 export async function getServerSideProps() {
-  const users = await findUsersServerside()
+  const users = await findUsers()
   return { props: { users }}
 }

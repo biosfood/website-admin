@@ -1,6 +1,7 @@
 import { createHash } from 'crypto'
 import { useGlobalContext } from '@/context'
 import type { Context } from '@/context'
+import useSSR from 'use-ssr'
 
 interface Resource {
   name: string,
@@ -17,7 +18,9 @@ interface User {
 export type {Resource, User}
 
 function doGraphQl(query: string, variables: object) {
-  return fetch("/api/graphql", {
+  const { isServer } = useSSR()
+  const url = isServer ? `${process.env.api}/graphql` : "/api/graphql"
+  return fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -151,42 +154,8 @@ export function getResources(username: string) {
   })
 }
 
-export async function getContentServerside(username: string, name: string) {
-  return await fetch(`${process.env.api}/graphql`, {
-    method: "POST",
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    },
-    body: JSON.stringify({
-      query: "query ResourceByName($username: String, $name: String) { resourceByName(username: $username, name: $name) {content} }",
-      variables: {username, name}
-    })
-  }).then(async res => res.json().then(data => data.data?.resourceByName?.content))
-}
-
-export async function findUsersServerside(username: string, name: string) {
-  return await fetch(`${process.env.api}/graphql`, {
-    method: "POST",
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    },
-    body: JSON.stringify({
-      query: `
-query Users {
-  users {
-    name
-    profilePicture {
-      id
-      name
-      preview
-      resourceType
-    }
-  }
-}
-`,
-      variables: {username, name}
-    })
-  }).then(async res => res.json().then(data => data.data?.users))
+export async function retrieveResourceByName(username: string, name: string) {
+  return await doGraphQl(`query ResourceByName($username: String, $name: String) {
+        resourceByName(username: $username, name: $name) {content} }`, {username, name})
+  .then(data => data.data?.resourceByName?.content)
 }
