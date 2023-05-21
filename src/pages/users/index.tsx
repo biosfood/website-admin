@@ -1,14 +1,11 @@
 import Head from 'next/head'
 import { Text, Card, Container, Grid, Avatar, Row } from '@nextui-org/react'
-import { findUsers, User } from '@/api'
+import { findUsersServerside, User } from '@/api'
 import { useState, useEffect } from 'react'
 import { useRouter } from "next/router";
 
-export default function Home() {
-  const [users, setUsers] = useState<User[]>([])
+export default function Home({users}: {users: User[]}) {
   const router = useRouter()
-
-  useEffect(() => { findUsers().then((users: User[]) => setUsers(users)) }, [])
 
   return (
     <>
@@ -32,4 +29,9 @@ export default function Home() {
       </Container>
     </>
   )
+}
+
+export async function getServerSideProps() {
+  const users = await findUsersServerside()
+  return { props: { users }}
 }

@@ -164,3 +164,29 @@ export async function getContentServerside(username: string, name: string) {
     })
   }).then(async res => res.json().then(data => data.data?.resourceByName?.content))
 }
+
+export async function findUsersServerside(username: string, name: string) {
+  return await fetch(`${process.env.api}/graphql`, {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: JSON.stringify({
+      query: `
+query Users {
+  users {
+    name
+    profilePicture {
+      id
+      name
+      preview
+      resourceType
+    }
+  }
+}
+`,
+      variables: {username, name}
+    })
+  }).then(async res => res.json().then(data => data.data?.users))
+}
