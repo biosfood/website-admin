@@ -5,10 +5,10 @@ import { logout } from '@/api'
 import { useRouter } from "next/router";
 import Link from 'next/link'
 import { Client } from "react-hydration-provider";
-import { Page } from '@/pages/_app'
 import { Logo } from '@/components'
+import { Page, adminPages } from '@/types'
 
-export default function Navigation({pages, enforceLogin}: {pages: Page[], enforceLogin?: boolean}) {
+export default function Navigation() {
   const {context, setContext} = useGlobalContext()
   const router = useRouter()
 
@@ -26,7 +26,7 @@ export default function Navigation({pages, enforceLogin}: {pages: Page[], enforc
         </Link>
       </Navbar.Brand>
       <Navbar.Content variant="highlight-rounded">
-        {pages.map((page) => 
+        {adminPages.map((page: Page) => 
         <Link href={page.target} passHref legacyBehavior key={page.target}><Navbar.Link isActive={router.pathname == page.target}>
           {page.name}
         </Navbar.Link></Link>)}

@@ -1,8 +1,9 @@
 import Head from 'next/head'
 import { Text, Card, Container, Grid, Avatar, Row } from '@nextui-org/react'
-import { findUsers, User } from '@/api'
+import { findUsers } from '@/api'
 import { useState, useEffect } from 'react'
 import { useRouter } from "next/router";
+import { User } from '@/types'
 
 export default function Home({users}: {users: User[]}) {
   const router = useRouter()

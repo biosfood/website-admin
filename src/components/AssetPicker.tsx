@@ -3,7 +3,7 @@ import { Card, Text, Container, Spacer, Image, Dropdown, Button, Grid } from '@n
 import { useEffect, useState, ReactNode } from 'react'
 import { retrieveAsset } from '@/api'
 import { CloseSquare } from 'react-iconly'
-import type { Resource } from '@/api'
+import { Resource } from '@/types'
 import type { Selection } from "@react-types/shared/src/selection"
 import { Client } from "react-hydration-provider";
 

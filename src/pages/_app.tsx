@@ -9,22 +9,6 @@ import { Navigation, Footer, ContextProvider } from "@/components"
 
 const theme = createTheme({type: "dark",})
 
-export class Page {
-  target: string
-  name: string
-
-  constructor(target: string, name: string) {
-    this.target = target
-    this.name = name
-  }
-}
-
-export const adminPages = [
-  new Page("/admin", "Home"),
-  new Page("/admin/assets", "Assets"),
-  new Page("/admin/pages", "Pages"),
-]
-
 export default function App({ Component, pageProps }: AppProps) {
   function MainPage( ) {
     const {context, setContext} = useGlobalContext()
@@ -54,7 +38,7 @@ export default function App({ Component, pageProps }: AppProps) {
     return (
       <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '100vh'}}>
         <div>
-          <Navigation pages={adminPages} />
+          <Navigation/>
           <Component {...pageProps} />
         </div>
         <Footer/>

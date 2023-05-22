@@ -1,23 +1,10 @@
 import { createHash } from 'crypto'
 import { useGlobalContext } from '@/context'
-import type { Context } from '@/context'
 import useSSR from 'use-ssr'
-
-interface Resource {
-  name: string,
-  preview: string,
-  id: number,
-  resourceType: string,
-}
-
-interface User {
-  name: string,
-  profilePicture?: Resource,
-}
-
-export type {Resource, User}
+import { Context, Resource, User } from '@/types'
 
 function doGraphQl(query: string, variables: object) {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { isServer } = useSSR()
   const url = isServer ? `${process.env.api}/graphql` : "/api/graphql"
   return fetch(url, {

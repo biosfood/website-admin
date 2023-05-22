@@ -1,10 +1,11 @@
-import { useGlobalContext, ContextState } from '@/context'
+import { useGlobalContext } from '@/context'
 import { Card, Text, Container, Spacer, Button, Input, FormElement, Grid } from '@nextui-org/react'
 import { AssetPicker } from '@/components'
-import {setProfilePicture, login, changePassword as doChangePassword, changeEmail as doChangeEmail, Resource} from '@/api'
+import {setProfilePicture, login, changePassword as doChangePassword, changeEmail as doChangeEmail } from '@/api'
 import { useEffect, useState, useRef } from 'react';
 import Head from 'next/head'
-import { Client } from "react-hydration-provider";
+import { Client } from "react-hydration-provider"
+import { ContextState, Resource } from '@/types'
 
 function PasswordChange({context, setContext}: ContextState) {
   const [errorMessage, setErrorMessage] = useState('')

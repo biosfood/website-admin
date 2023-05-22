@@ -1,5 +1,5 @@
 import { useContext, useState, createContext, useEffect, ReactNode } from 'react'
-import { GlobalContext, Context, defaultContext } from '@/context'
+import { defaultContext, GlobalContext } from '@/context'
 
 export default function ContextProvider({children}: {children?: ReactNode}) {
   const [context, setContext] = useState(defaultContext)

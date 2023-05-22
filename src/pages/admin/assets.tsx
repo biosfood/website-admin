@@ -1,11 +1,12 @@
 import { Grid, Card, Row, Button, Text, Image as NextImage, Input, Spacer, FormElement, Modal, Container } from '@nextui-org/react';
-import { createAsset, deleteResource, updateUserData, retrieveAsset, Resource } from '@/api'
+import { createAsset, deleteResource, updateUserData, retrieveAsset } from '@/api'
 import { useEffect, useState, useRef } from 'react';
 import { Delete, Show } from 'react-iconly'
 import {useGlobalContext} from '@/context'
 import Head from 'next/head'
 import { Client } from "react-hydration-provider";
 import { FileDropZone } from '@/components'
+import { Resource } from '@/types'
 
 function ViewModal() {
   const [modalOpen, setModalOpen] = useState(false)
@@ -104,7 +105,7 @@ export default function Assets() {
         <Grid md id={"FILE"}>
           <File style={{width: '100%'}}/>
         </Grid>
-        {context.resources.filter(resource => resource.resourceType == 'image').map(resource => (
+        {context.resources.filter((resource: Resource) => resource.resourceType == 'image').map((resource: Resource) => (
             <Grid md key={resource.id} style={{width: '100%'}}>
               <Card>
                 <Card.Header style={{display: 'flex', justifyContent: 'space-between'}}>

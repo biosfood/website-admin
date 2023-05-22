@@ -1,23 +1,6 @@
 import { useContext, useState, createContext, useEffect, Dispatch, SetStateAction } from 'react'
 import { useRouter } from 'next/router'
-import { Resource } from '@/api'
-
-interface Context {
-  username: string,
-  useremail: string,
-  path: string,
-  token?: string,
-  profilePicture: any,
-  resources: Array<Resource>,
-  updateContext: () => void,
-}
-
-interface ContextState {
-  context: Context,
-  setContext: Dispatch<SetStateAction<Context>>,
-}
-
-export type {Context, ContextState}
+import { Context, ContextState } from '@/types'
 
 export const defaultContext: Context = {
   username: '',

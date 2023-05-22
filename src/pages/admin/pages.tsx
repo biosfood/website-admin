@@ -1,12 +1,13 @@
-import { useGlobalContext, ContextState } from '@/context'
+import { useGlobalContext } from '@/context'
 import { Container, Text, Card, Button, Modal, Input, Textarea, Navbar, Spacer, Dropdown, FormElement } from '@nextui-org/react';
 import Head from 'next/head'
 import { PaperPlus, Delete, Edit, Image2, Send, Show } from 'react-iconly'
 import { useEffect, useState, useRef } from 'react'
-import { updateUserData, createArticle, deleteResource, retrieveAsset, updateResource, Resource } from '@/api'
+import { updateUserData, createArticle, deleteResource, retrieveAsset, updateResource } from '@/api'
 import { AssetPicker, RenderPage } from '@/components'
 import { Client } from "react-hydration-provider";
 import { useRouter } from "next/router";
+import { ContextState, Resource } from '@/types'
 
 function getNextName(title: string, directory: string) {
   const remainder = title.substring(directory.length)
@@ -49,7 +50,7 @@ function CreatePageTemplate({context, setContext}: ContextState) {
     if (!filename) {
       return setError("Please enter a path for your new page")
     }
-    if (context.resources.find(resource => resource.name == filename)) {
+    if (context.resources.find((resource: Resource) => resource.name == filename)) {
       return setError("A resource with that name already exists...")
     }
     if (filename[0] != '/') {
@@ -174,9 +175,9 @@ function EditPageTemplate({context, setContext}: ContextState) {
 
 function Page({pageDirectory, context, setContext, createPage, editPage}:
               ContextState & {pageDirectory: string, createPage: (directory: string) => void, editPage: (page: Resource) => void}) {
-  const children = Array.from(new Set(context.resources.filter(resource => resource.name.startsWith(pageDirectory) && resource.name.length > pageDirectory.length)
-                             .map(resource => getNextName(resource.name, pageDirectory))))
-  const page = context.resources.find(resource => resource.name == pageDirectory)
+  const children = Array.from(new Set(context.resources.filter((resource: Resource) => resource.name.startsWith(pageDirectory) && resource.name.length > pageDirectory.length)
+                             .map((resource: Resource) => getNextName(resource.name, pageDirectory))))
+  const page = context.resources.find((resource: Resource) => resource.name == pageDirectory)
   const router = useRouter()
   return (
     <Card variant="bordered" style={{marginTop: '1em', background: 
