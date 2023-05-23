@@ -5,6 +5,7 @@ import { Context, ContextState } from '@/types'
 export const defaultContext: Context = {
   username: '',
   useremail: '',
+  hostname: "",
   path: '',
   token: '???',
   profilePicture: null,

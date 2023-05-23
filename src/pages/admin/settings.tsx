@@ -127,6 +127,46 @@ function EmailChange({context, setContext}: ContextState) {
   )
 }
 
+function HostChange({context, setContext}: ContextState) {
+  const inputRef = useRef<FormElement>(null)
+  const [errorMessage, setErrorMessage] = useState('')
+
+  useEffect(() => inputRef.current.value = context.hostname, [context.hostname])
+
+  function cancel() {
+    inputRef.current!.value = context.hostname
+  }
+
+  function changeHost() {
+    setErrorMessage("this functionality is not implemented yet...")
+    return
+    doChangeHost(context, inputRef.current!.value).then(success => {
+      if (success) {
+        setErrorMessage('hostname change was successful')
+        return
+      }
+      setErrorMessage('something went wrong while changing your hostname')
+      return
+    })
+  }
+
+  return (
+    <Card>
+      <Card.Header><Text h2>Change hostname</Text></Card.Header>
+      <Card.Body>
+        <Input ref={inputRef} aria-label="new hostname" bordered type="text" color="primary" size="xl"
+          placeholder="new hostname" clearable/>
+        <Spacer y={1}/>
+        <Text color="error">{errorMessage}</Text>
+      </Card.Body>
+      <Card.Footer style={{display: "flex", justifyContent: "space-around"}}>
+        <Button light color="error" onPress={cancel}>Cancel</Button>
+        <Button color="primary" onPress={changeHost}>Change Hostname</Button>
+      </Card.Footer>
+    </Card>
+  )
+}
+
 export default function Settings() {
   const { context, setContext} = useGlobalContext();
 
@@ -134,6 +174,9 @@ export default function Settings() {
   <Client>
     <Container>
       <Text h1>Settings</Text>
+      <Grid sm css={{width: '100%'}}>
+        <HostChange context={context} setContext={setContext}/>
+      </Grid>
       <Grid.Container gap={1}>
         <Grid sm css={{width: '100%'}}>
           <EmailChange context={context} setContext={setContext}/>

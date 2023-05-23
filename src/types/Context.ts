@@ -4,6 +4,7 @@ import { useContext, useState, createContext, useEffect, Dispatch, SetStateActio
 export interface Context {
   username: string,
   useremail: string,
+  hostname: string,
   path: string,
   token?: string,
   profilePicture: any,
