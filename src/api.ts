@@ -54,13 +54,14 @@ export function login(context: Context, setContext: (context: Context) => void, 
 
 export function updateUserData(context: Context, setContext: (context: Context) => void) {
   return doGraphQl('query GetUserData($token: String) {userData(token: $token) '+
-                   '{name, email, profilePicture {id, name, preview}, resources {id, name, preview, resourceType}}}', {token: context.token})
+                   '{name, email, hostname, profilePicture {id, name, preview}, resources {id, name, preview, resourceType}}}', {token: context.token})
   .then(response => {
     if (response?.data?.userData?.name) {
       setContext({...context,
                  username: response.data.userData.name,
                  useremail: response.data.userData.email,
                  profilePicture: response.data.userData.profilePicture,
+                 hostname: response.data.userData.hostname,
                  resources: response.data.userData.resources})
       return true
     }
@@ -145,4 +146,11 @@ export async function retrieveResourceByName(username: string, name: string) {
   return await doGraphQl(`query ResourceByName($username: String, $name: String) {
         resourceByName(username: $username, name: $name) {content} }`, {username, name})
   .then(data => data.data?.resourceByName?.content)
+}
+
+export function changeHost(context: Context, newHostname: string) {
+  return doGraphQl('mutation ChangeHost($token: String, $newHostname: String)'+
+                   '{changeHostname(token: $token, newHostname: $newHostname)}',
+                    {token: context.token, newHostname})
+  .then(response => response.data?.changeHostname)
 }

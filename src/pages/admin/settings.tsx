@@ -1,7 +1,7 @@
 import { useGlobalContext } from '@/context'
 import { Card, Text, Container, Spacer, Button, Input, FormElement, Grid } from '@nextui-org/react'
 import { AssetPicker } from '@/components'
-import {setProfilePicture, login, changePassword as doChangePassword, changeEmail as doChangeEmail } from '@/api'
+import {setProfilePicture, login, changePassword as doChangePassword, changeEmail as doChangeEmail, changeHost as doChangeHost } from '@/api'
 import { useEffect, useState, useRef } from 'react';
 import Head from 'next/head'
 import { Client } from "react-hydration-provider"
@@ -131,15 +131,13 @@ function HostChange({context, setContext}: ContextState) {
   const inputRef = useRef<FormElement>(null)
   const [errorMessage, setErrorMessage] = useState('')
 
-  useEffect(() => inputRef.current.value = context.hostname, [context.hostname])
+  useEffect(() => {inputRef.current.value = context.hostname}, [context.hostname])
 
   function cancel() {
     inputRef.current!.value = context.hostname
   }
 
   function changeHost() {
-    setErrorMessage("this functionality is not implemented yet...")
-    return
     doChangeHost(context, inputRef.current!.value).then(success => {
       if (success) {
         setErrorMessage('hostname change was successful')
