@@ -149,6 +149,12 @@ export async function retrieveResourceByName(username: string, name: string) {
   .then(data => data.data?.resourceByName?.content)
 }
 
+export async function retrieveResourceByHostname(hostname: string, name: string) {
+  return await doGraphQl(`query ResourceByHostname($hostname: String, $name: String) {
+        resourceByHostname(hostname: $hostname, name: $name) {content} }`, {hostname, name})
+  .then(data => data.data?.resourceByHostname?.content)
+}
+
 export function changeHost(context: Context, newHostname: string) {
   return doGraphQl('mutation ChangeHost($token: String, $newHostname: String)'+
                    '{changeHostname(token: $token, newHostname: $newHostname)}',

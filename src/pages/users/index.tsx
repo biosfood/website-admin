@@ -27,7 +27,7 @@ export default function Home({users}: {users: User[]}) {
                   </Row>
                   <div>
                     {user.hostname?.length > 0 &&
-                     <Button onPress={() => router.push(`https://${user.hostname}`)}>{user.hostname}</Button>}
+                     <Button onPress={() => router.push(`http://${user.hostname}`)}>{user.hostname}</Button>}
                   </div>
                 </Row>
               </Card.Body>

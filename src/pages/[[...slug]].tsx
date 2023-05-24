@@ -2,7 +2,7 @@ import { Text } from '@nextui-org/react'
 import { useGlobalContext } from '@/context'
 import { useRouter } from "next/router";
 import { useState, useEffect } from 'react'
-import { retrieveResourceByName } from '@/api'
+import { retrieveResourceByHostname } from '@/api'
 import Head from 'next/head'
 import { Client } from "react-hydration-provider";
 import { RenderPage } from '@/components'
@@ -15,10 +15,8 @@ export default function Page({content}: {content: string}) {
   )
 }
 
-export async function getServerSideProps({params}: {params: {slug?: string[]}}) {
-  const content = await retrieveResourceByName(process.env.rootUser!, "/" + (params.slug?.join("/") || "")) || "Server error"
-  if (!content) {
-    // Show error message or redirect?
-  }
+export async function getServerSideProps({params, req}: {params: {slug?: string[]}, req: {headers: {host: string}}}) {
+  const hostname = req.headers.host
+  const content = await retrieveResourceByHostname(hostname, "/" + (params.slug?.join("/") || "")) || "Server error"
   return { props: { content } }
 }
