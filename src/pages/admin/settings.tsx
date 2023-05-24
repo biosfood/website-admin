@@ -131,7 +131,7 @@ function HostChange({context, setContext}: ContextState) {
   const inputRef = useRef<FormElement>(null)
   const [errorMessage, setErrorMessage] = useState('')
 
-  useEffect(() => {inputRef.current.value = context.hostname}, [context.hostname])
+  useEffect(() => {inputRef.current!.value = context.hostname}, [context.hostname])
 
   function cancel() {
     inputRef.current!.value = context.hostname

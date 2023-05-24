@@ -7,5 +7,6 @@ export interface Resource {
 
 export interface User {
   name: string,
+  hostname: string,
   profilePicture?: Resource,
 }

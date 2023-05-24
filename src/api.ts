@@ -28,6 +28,7 @@ export function findUsers() {
 query Users {
   users {
     name
+    hostname
     profilePicture {
       id
       name
