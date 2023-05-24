@@ -94,10 +94,7 @@ function EditPageTemplate({context, setContext}: ContextState) {
     if (!resource) {
       return "URL"
     }
-    if (context.username == process.env.rootUser) {
-      return resource.name
-    }
-    return `/users/${context.username}${resource.name}`
+    return resource.name
   }
 
   function finishEditPage() {
@@ -146,7 +143,7 @@ function EditPageTemplate({context, setContext}: ContextState) {
           <Text color="error">{error}</Text>
         </div>
         <div style={{display: mode=='view' ? '' : 'none'}}>
-          <RenderPage username={context.username} onNavigate={finishEditPage}>{content.current?.value}</RenderPage>
+          <RenderPage basePath={`/users/${context.username}`} onNavigate={finishEditPage}>{content.current?.value}</RenderPage>
         </div>
       </Modal.Body>
       <Modal.Footer style={{display: "flex", justifyContent: "space-between"}}>

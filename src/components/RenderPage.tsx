@@ -6,22 +6,12 @@ import remarkGfm from 'remark-gfm'
 import { Card, Table, Image, Text } from '@nextui-org/react';
 import Head from 'next/head'
 
-const processHref = (href: string, username: string) => {
-  if (href.startsWith("/")) {
-    if (username == process.env.rootUser) {
-      return href
-    }
-    return `users/${username}/${href}`
-  }
-  return href
-}
-
-export default function RenderPage({children, username, onNavigate}: {children: ReactNode, username: string, onNavigate?: () => void}) {
+export default function RenderPage({children, basePath, onNavigate}: {children: ReactNode, basePath: string, onNavigate?: () => void}) {
   return (
   <ReactMarkdown
     components={{
       a: ({node, href, ...props}: {node: any, href?: string}) => {
-        return <Link {...props} href={processHref(href!, username)} onClick={onNavigate}/>
+        return <Link {...props} href={basePath + href!} onClick={onNavigate}/>
       },
       card: ({node, ...props}: {node: any}) => <Card><Card.Body {...props}/></Card>,
       table: ({node, children, ...props}: {node: any, children: ReactNode}) => {
