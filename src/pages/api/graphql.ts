@@ -23,3 +23,11 @@ export default async function graphql(request: Request, response: Response) {
   }).then(res => res.json())
   response.status(200).json(serverResponse)
 }
+
+export const config = {
+    api: {
+        bodyParser: {
+            sizeLimit: '4mb'
+        }
+    }
+}
