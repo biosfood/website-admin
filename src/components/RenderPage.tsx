@@ -3,8 +3,28 @@ import { useEffect, useState, ReactNode } from 'react'
 import Link from 'next/link'
 import rehypeRaw from 'rehype-raw'
 import remarkGfm from 'remark-gfm'
-import { Card, Table, Image, Text } from '@nextui-org/react';
+import { Card, Table, Image, Text, Grid } from '@nextui-org/react';
 import Head from 'next/head'
+import {visit} from 'unist-util-visit'
+import remarkDirective from 'remark-directive'
+
+function customComponents() {
+  return (tree) => {
+    visit(
+      tree,
+      ["textDirective", "leafDirective", "containerDirective"],
+      (node) => {
+        console.log(node)
+        node.data = {
+          hName: node.name,
+          hProperties: node.attributes,
+          ...node.data
+        };
+        return node;
+      }
+    );
+  };
+}
 
 export default function RenderPage({children, basePath, onNavigate}: {children: ReactNode, basePath: string, onNavigate?: () => void}) {
   return (
@@ -49,9 +69,15 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
         return <Text {...props}>{children as ReactNode}</Text>
       },
       h1: ({node, ...props}: {node: any}) => <Text h1 {...props} style={{textAlign: "center", fontSize: "5em", margin: "1em"}}/>,
+      h2: ({node, ...props}: {node: any}) => <Text h2 {...props} style={{textAlign: "center", fontSize: "3em", margin: "0.5em"}}/>,
+      gridcontainer: ({node, children, ...props}: {node: any, children: any[]}) => {
+        return <Grid.Container {...props}>
+          {children.map(child => <Grid xs>{child}</Grid>)}
+        </Grid.Container>
+      },
     } as {a: any,  table: any}}
     rehypePlugins={[rehypeRaw]}
-    remarkPlugins={[remarkGfm]}>
+    remarkPlugins={[remarkGfm, remarkDirective, customComponents]}>
     {children as string}
   </ReactMarkdown>)
 }
