@@ -7,6 +7,7 @@ import { Card, Table, Image, Text, Grid, Row } from '@nextui-org/react';
 import Head from 'next/head'
 import {visit} from 'unist-util-visit'
 import remarkDirective from 'remark-directive'
+import queryString from 'query-string'
 
 function customComponents() {
   return (tree) => {
@@ -14,7 +15,6 @@ function customComponents() {
       tree,
       ["textDirective", "leafDirective", "containerDirective"],
       (node) => {
-        console.log(node)
         node.data = {
           hName: node.name,
           hProperties: node.attributes,
@@ -56,11 +56,14 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
       },
       title: ({node, ...props}: {node: any}) => <Head><title {...props}/></Head>,
       img: ({node, alt, src, ...props}: {node: any, alt: string, src: string}) => {
+        const params = alt.includes("?") ? queryString.parse(alt.split("?")[1]) : {}
+        props = {...props, ...params}
+        alt = alt.split("?")[0]
         const realSrc = src.startsWith("resource?id=") ? `${process.env.api}/${src}` : src
         if (alt == "favicon") {
           return <Head><link rel="icon" type="image/x-icon" href={realSrc} /></Head>
         }
-        return <img src={realSrc} alt={alt}/>
+        return <Image {...props} src={realSrc} alt={alt} objectFit="fill"/>
       },
       p: ({node, children, ...props}: {node: any, children: {type?: {name: string}}[]}) => {
         if (children[0].type?.name == "img") {
