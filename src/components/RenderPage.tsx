@@ -3,7 +3,7 @@ import { useEffect, useState, ReactNode } from 'react'
 import Link from 'next/link'
 import rehypeRaw from 'rehype-raw'
 import remarkGfm from 'remark-gfm'
-import { Card, Table, Image, Text, Grid } from '@nextui-org/react';
+import { Card, Table, Image, Text, Grid, Row } from '@nextui-org/react';
 import Head from 'next/head'
 import {visit} from 'unist-util-visit'
 import remarkDirective from 'remark-directive'
@@ -31,7 +31,7 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
   <ReactMarkdown
     components={{
       a: ({node, href, ...props}: {node: any, href?: string}) => {
-        return <Link {...props} href={basePath + href!} onClick={onNavigate}/>
+        return <Link {...props} href={(href.startsWith("/") ? basePath : "") + href!} onClick={onNavigate}/>
       },
       card: ({node, ...props}: {node: any}) => <Card><Card.Body {...props}/></Card>,
       table: ({node, children, ...props}: {node: any, children: ReactNode}) => {
@@ -75,6 +75,7 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
           {children.map(child => <Grid xs>{child}</Grid>)}
         </Grid.Container>
       },
+      row: ({node, ...props}: {node: any}) => <Row justify="space-around" {...props}/>
     } as {a: any,  table: any}}
     rehypePlugins={[rehypeRaw]}
     remarkPlugins={[remarkGfm, remarkDirective, customComponents]}>
