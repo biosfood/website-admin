@@ -1,17 +1,10 @@
-import { Text } from '@nextui-org/react'
-import { useGlobalContext } from '@/context'
-import { useRouter } from "next/router";
-import { useState, useEffect } from 'react'
+import { Container } from '@nextui-org/react'
 import { retrieveResourceByHostname } from '@/api'
-import Head from 'next/head'
-import { Client } from "react-hydration-provider";
 import { RenderPage } from '@/components'
 
 export default function Page({content}: {content: string}) {
   return (
-    <Client>
-      <div style={{margin: 10}}><RenderPage basePath="">{content}</RenderPage></div>
-    </Client>
+    <Container><RenderPage basePath="">{content}</RenderPage></Container>
   )
 }
 

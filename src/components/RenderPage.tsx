@@ -8,6 +8,7 @@ import Head from 'next/head'
 import {visit} from 'unist-util-visit'
 import remarkDirective from 'remark-directive'
 import queryString from 'query-string'
+import { Client } from "react-hydration-provider";
 
 function customComponents() {
   return (tree) => {
@@ -63,7 +64,7 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
         if (alt == "favicon") {
           return <Head><link rel="icon" type="image/x-icon" href={realSrc} /></Head>
         }
-        return <Image {...props} src={realSrc} alt={alt} objectFit="fill"/>
+        return <Client><Image {...props} src={realSrc} alt={alt} objectFit="fill"/></Client>
       },
       p: ({node, children, ...props}: {node: any, children: {type?: {name: string}}[]}) => {
         if (children[0].type?.name == "img") {
@@ -75,7 +76,7 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
       h2: ({node, ...props}: {node: any}) => <Text h2 {...props} style={{textAlign: "center", fontSize: "3em", margin: "0.5em"}}/>,
       gridcontainer: ({node, children, ...props}: {node: any, children: any[]}) => {
         return <Grid.Container {...props}>
-          {children.map(child => <Grid xs>{child}</Grid>)}
+          {children.map((child, index) => <Grid xs key={index}>{child}</Grid>)}
         </Grid.Container>
       },
       row: ({node, ...props}: {node: any}) => <Row justify="space-around" {...props}/>
