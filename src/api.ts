@@ -1,7 +1,6 @@
 import { createHash } from 'crypto'
-import { useGlobalContext } from '@/context'
 import useSSR from 'use-ssr'
-import { Context, Resource, User } from '@/types'
+import { Context, Resource } from '@/types'
 
 function doGraphQl(query: string, variables: object) {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -19,8 +18,9 @@ function doGraphQl(query: string, variables: object) {
 
 function processPassword(password: string) {
   const hash = createHash("sha256")
-  hash.update(password + "EISENHAUER backend Password")
-  return "MD5-" + hash.digest("base64") // ;)
+  hash.update("B6E207480693CD512A008C46F815E689" + password + "EISENHAUER backend Password")
+  // should the hash ever get leaked, the hash looks like a MD5 and the user password should be safe
+  return `$1$${hash.digest("base64")}$`
 }
 
 export function findUsers() {
