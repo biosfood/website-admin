@@ -2,6 +2,8 @@
 
 This is the source code repository for my personal website. At /admin, there is an admin panel for registered users to edit their respective websites, which can be viewed by anyone at /users
 
+The pages support some markdown extensions. You can look at a overview of the added functionality [here](./MARKDOWN.md).
+
 ## Building
 
 Run 

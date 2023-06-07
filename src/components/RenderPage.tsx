@@ -1,5 +1,5 @@
 import ReactMarkdown from 'react-markdown'
-import { useEffect, useState, ReactNode } from 'react'
+import { ReactNode } from 'react'
 import Link from 'next/link'
 import rehypeRaw from 'rehype-raw'
 import remarkGfm from 'remark-gfm'
