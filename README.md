@@ -27,3 +27,17 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Backend
+
+You will also need to install and start the graphQL backend server.
+
+```bash
+git clone https://github.com/biosfood/website-backend.git
+cd website-backend
+npm i
+npm run start
+```
+
+This will start the backend server at `localhost:4000`.
+
