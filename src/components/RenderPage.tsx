@@ -11,7 +11,7 @@ import queryString from 'query-string'
 import { Client } from "react-hydration-provider";
 
 function customComponents() {
-  return (tree) => {
+  return (tree: any) => {
     visit(
       tree,
       ["textDirective", "leafDirective", "containerDirective"],
@@ -32,10 +32,10 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
   <ReactMarkdown
     components={{
       a: ({node, href, ...props}: {node: any, href?: string}) => {
-        return <Link {...props} href={(href.startsWith("/") ? basePath : "") + href!} onClick={onNavigate}/>
+        return <Link {...props} href={(href!.startsWith("/") ? basePath : "") + href!} onClick={onNavigate}/>
       },
       card: ({node, ...props}: {node: any}) => <Card><Card.Body {...props}/></Card>,
-      table: ({node, children, ...props}: {node: any, children: ReactNode}) => {
+      table: ({children}: {node: any, children: ReactNode}) => {
         if (!children) {
           return null
         }
@@ -56,7 +56,7 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
         </Table>
       },
       title: ({node, ...props}: {node: any}) => <Head><title {...props}/></Head>,
-      img: ({node, alt, src, ...props}: {node: any, alt: string, src: string}) => {
+      img: ({node, alt, src, ...props}: {node: any, alt: string, src: string, maxHeight?: string}) => {
         const params = alt.includes("?") ? queryString.parse(alt.split("?")[1]) : {}
         props = {...props, ...params}
         alt = alt.split("?")[0]
@@ -67,16 +67,20 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
         return <Client><Image {...props} src={realSrc} alt={alt} objectFit="fill"/></Client>
       },
       p: ({node, children, ...props}: {node: any, children: {type?: {name: string}}[]}) => {
-        if (children[0].type?.name == "img") {
+        var hasText = false;
+        children.map(child => {
+          if (typeof child == "string") { hasText = true }
+        })
+        if (!hasText) {
           return <div>{children as ReactNode}</div>
         }
         return <Text {...props}>{children as ReactNode}</Text>
       },
       h1: ({node, ...props}: {node: any}) => <Text h1 {...props} style={{textAlign: "center", fontSize: "5em", margin: "1em"}}/>,
       h2: ({node, ...props}: {node: any}) => <Text h2 {...props} style={{textAlign: "center", fontSize: "3em", margin: "0.5em"}}/>,
-      gridcontainer: ({node, children, ...props}: {node: any, children: any[]}) => {
+      gridcontainer: ({node, children, ...props}: {node: any, children?: any[]}) => {
         return <Grid.Container {...props}>
-          {children.map((child, index) => <Grid xs key={index}>{child}</Grid>)}
+          {children?.map((child, index) => <Grid xs key={index}>{child}</Grid>)}
         </Grid.Container>
       },
       row: ({node, ...props}: {node: any}) => <Row justify="space-around" {...props}/>
