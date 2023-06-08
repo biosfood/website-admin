@@ -1,10 +1,9 @@
-import { Container } from '@nextui-org/react'
 import { retrieveResourceByHostname } from '@/api'
 import { RenderPage } from '@/components'
 
 export default function Page({content}: {content: string}) {
   return (
-    <Container><RenderPage basePath="">{content}</RenderPage></Container>
+    <RenderPage basePath="">{content}</RenderPage>
   )
 }
 
