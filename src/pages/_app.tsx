@@ -3,9 +3,10 @@ import { createTheme, NextUIProvider } from "@nextui-org/react"
 import { useGlobalContext } from '@/context'
 import { useEffect } from 'react'
 import { useRouter } from "next/router";
-import { updateUserData, getResources } from '@/api'
+import { updateUserData } from '@/api'
 import { HydrationProvider } from "react-hydration-provider";
 import { Navigation, Footer, ContextProvider } from "@/components"
+import Head from 'next/head'
 
 const theme = createTheme({type: "dark",})
 
@@ -42,6 +43,9 @@ export default function App({ Component, pageProps }: AppProps) {
           <Component {...pageProps} />
         </div>
         <Footer/>
+        <Head>
+          <link rel="icon" href="/favicon.svg"/>
+        </Head>
       </div>
     )
   }
