@@ -3,7 +3,7 @@ import { ReactNode } from 'react'
 import Link from 'next/link'
 import rehypeRaw from 'rehype-raw'
 import remarkGfm from 'remark-gfm'
-import { Card, Table, Image, Text, Grid, Row } from '@nextui-org/react';
+import { Card, Table, Image, Text, Grid, Row, Spacer, Container } from '@nextui-org/react';
 import Head from 'next/head'
 import {visit} from 'unist-util-visit'
 import remarkDirective from 'remark-directive'
@@ -79,11 +79,13 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
       h1: ({node, ...props}: {node: any}) => <Text h1 {...props} style={{textAlign: "center", fontSize: "5em", margin: "1em"}}/>,
       h2: ({node, ...props}: {node: any}) => <Text h2 {...props} style={{textAlign: "center", fontSize: "3em", margin: "0.5em"}}/>,
       gridcontainer: ({node, children, ...props}: {node: any, children?: any[]}) => {
-        return <Grid.Container {...props}>
+        return (<Grid.Container {...props}>
           {children?.map((child, index) => <Grid xs key={index}>{child}</Grid>)}
-        </Grid.Container>
+        </Grid.Container>)
       },
-      row: ({node, ...props}: {node: any}) => <Row justify="space-around" {...props}/>
+      row: ({node, ...props}: {node: any}) => <Row justify="space-around" {...props}/>,
+      spacer: (props: object) => <Spacer {...props}/>,
+      container: (props: object) => <Container {...props}/>
     } as {a: any,  table: any}}
     rehypePlugins={[rehypeRaw]}
     remarkPlugins={[remarkGfm, remarkDirective, customComponents]}>
