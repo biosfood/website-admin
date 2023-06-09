@@ -15,7 +15,12 @@ export default function Page({content, username, favicon}: {content: string, use
 
 export async function getServerSideProps({params}: {params: {slug: string[]}}) {
   const username = params.slug[0]
-  const content = await retrieveResourceByName(username, "/" + params.slug.slice(1).join("/")) || "Resource not found"
-  const favicon = await (await fetch(`${process.env.api}/favicon?username=${username}`)).text()
+  var content = "", favicon = ""
+  const contentPromise = retrieveResourceByName(username, "/" + params.slug.slice(1).join("/")).then(data => {
+    content = data || "Resource not found"
+  })
+  const faviconPromise = fetch(`${process.env.api}/favicon?username=${username}`)
+  .then(response => response.text()).then(data => { favicon = data })
+  await Promise.all([contentPromise, faviconPromise])
   return { props: { content, username, favicon } }
 }
