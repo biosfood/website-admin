@@ -8,6 +8,7 @@ import Head from 'next/head'
 import {visit} from 'unist-util-visit'
 import remarkDirective from 'remark-directive'
 import queryString from 'query-string'
+import { useRouter } from "next/router";
 
 function customComponents() {
   return (tree: any) => {
@@ -27,11 +28,13 @@ function customComponents() {
 }
 
 export default function RenderPage({children, basePath, onNavigate}: {children: ReactNode, basePath: string, onNavigate?: () => void}) {
+  const router = useRouter()
+  const getHref = (href?: string) => (href!.startsWith("/") ? basePath : "") + href!
   return (
   <ReactMarkdown
     components={{
       a: ({node, href, ...props}: {node: any, href?: string}) => {
-        return <Link {...props} href={(href!.startsWith("/") ? basePath : "") + href!} onClick={onNavigate}/>
+        return <Link {...props} href={getHref(href)} onClick={onNavigate}/>
       },
       card: ({node, ...props}: {node: any}) => <Card><Card.Body {...props}/></Card>,
       table: ({children}: {node: any, children: ReactNode}) => {
@@ -59,7 +62,7 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
         const params = alt.includes("?") ? queryString.parse(alt.split("?")[1]) : {}
         props = {...props, ...params}
         alt = alt.split("?")[0]
-        return <Image {...props} src={src} alt={alt} objectFit="fill"/>
+        return <Image {...props} src={src} alt={alt} objectFit="cover"/>
       },
       p: ({node, children, ...props}: {node: any, children: {type?: {name: string}}[]}) => {
         var hasText = false;
@@ -80,7 +83,17 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
       },
       row: ({node, ...props}: {node: any}) => <Row justify="space-around" {...props}/>,
       spacer: (props: object) => <Spacer {...props}/>,
-      container: (props: object) => <Container {...props}/>
+      container: (props: object) => <Container {...props}/>,
+      projectcard: ({href, title, description}: {href: string, title: string, description: string}) => {
+        return <Card variant="bordered" isPressable onPress={() => router.push(getHref(href))}>
+            <Card.Header><Text h3>{title}</Text></Card.Header>
+            <Card.Body>
+              <Grid.Container>
+                <Grid><Text>{description}</Text></Grid>
+              </Grid.Container>
+            </Card.Body>
+          </Card>
+      }
     } as {a: any,  table: any}}
     rehypePlugins={[rehypeRaw]}
     remarkPlugins={[remarkGfm, remarkDirective, customComponents]}>

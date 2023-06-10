@@ -1,7 +1,4 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import { useEffect, useState } from 'react';
-import { useRouter } from "next/router";
 import { useGlobalContext } from '@/context'
 
 export default function Home() {
