@@ -46,7 +46,7 @@ export default function Navigation() {
             <Dropdown.Item key="settings" withDivider>
                 Settings
             </Dropdown.Item>
-            <Dropdown.Item key="logout" withDivider>
+            <Dropdown.Item key="logout" withDivider textValue={"log out"}>
               <Button flat color="error" onPress={() => logout(context, setContext)}>Log Out</Button>
             </Dropdown.Item>
           </Dropdown.Menu>

@@ -19,7 +19,7 @@ export default function Login() {
   async function login(e: {preventDefault: () => any}) {
     e.preventDefault()
     if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email.current!.value)) {
-      setErrorMessage("please enter a valid email")
+      setErrorMessage("please enter a valid email address")
       return
     }
     if (!password.current!.value) {
@@ -60,7 +60,7 @@ export default function Login() {
             Eisenhauer Backend Login
           </Text>
           <Client>
-            <form onSubmit={login}>
+            <form onSubmit={login} autoComplete="on" >
               <Input aria-label="email"
                 bordered fullWidth
                 color="primary" size="lg" placeholder="Email"
