@@ -1,5 +1,5 @@
 import { Resource } from './Resource'
-import { useContext, useState, createContext, useEffect, Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction } from 'react'
 
 export interface Context {
   username: string,

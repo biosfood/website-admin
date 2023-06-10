@@ -2,7 +2,7 @@ import { useGlobalContext } from '@/context'
 import { Container, Text, Card, Button, Modal, Input, Textarea, Navbar, Spacer, Dropdown, FormElement } from '@nextui-org/react';
 import Head from 'next/head'
 import { PaperPlus, Delete, Edit, Image2, Send, Show } from 'react-iconly'
-import { useEffect, useState, useRef } from 'react'
+import { useState, useRef } from 'react'
 import { updateUserData, createArticle, deleteResource, retrieveAsset, updateResource } from '@/api'
 import { AssetPicker, RenderPage } from '@/components'
 import { Client } from "react-hydration-provider";
@@ -87,7 +87,7 @@ function EditPageTemplate({context, setContext}: ContextState) {
     if (!resource) {
       return
     }
-    insertText((text: string) => `![${text}](resource?id=${resource?.id})`)
+    insertText((text: string) => `![${text}](/api/resource?id=${resource?.id})`)
   }
 
   function createHref(resource?: Resource) {

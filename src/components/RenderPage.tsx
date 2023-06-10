@@ -8,7 +8,6 @@ import Head from 'next/head'
 import {visit} from 'unist-util-visit'
 import remarkDirective from 'remark-directive'
 import queryString from 'query-string'
-import { Client } from "react-hydration-provider";
 
 function customComponents() {
   return (tree: any) => {
@@ -60,11 +59,7 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
         const params = alt.includes("?") ? queryString.parse(alt.split("?")[1]) : {}
         props = {...props, ...params}
         alt = alt.split("?")[0]
-        const realSrc = src.startsWith("resource?id=") ? `${process.env.api}/${src}` : src
-        if (alt == "favicon") {
-          return <Head><link rel="icon" type="image/x-icon" href={realSrc} /></Head>
-        }
-        return <Client><Image {...props} src={realSrc} alt={alt} objectFit="fill"/></Client>
+        return <Image {...props} src={src} alt={alt} objectFit="fill"/>
       },
       p: ({node, children, ...props}: {node: any, children: {type?: {name: string}}[]}) => {
         var hasText = false;

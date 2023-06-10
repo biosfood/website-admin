@@ -1,11 +1,4 @@
-interface Request {
-  method: string,
-  body: object
-}
-
-interface Response {
-  status: (status: number) => {json: (data: object) => any}
-}
+import type { Request, Response } from "@/types"
 
 export default async function graphql(request: Request, response: Response) {
   if (request.method != "POST") {
