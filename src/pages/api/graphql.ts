@@ -1,6 +1,6 @@
-import type { Request, Response } from "@/types"
+import { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function graphql(request: Request, response: Response) {
+export default async function graphql(request: NextApiRequest, response: NextApiResponse) {
   if (request.method != "POST") {
     // Method not allowed
     response.status(405).json({})

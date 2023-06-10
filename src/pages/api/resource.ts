@@ -1,4 +1,3 @@
-import type { Request, Response } from "@/types"
 import { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios'
 
