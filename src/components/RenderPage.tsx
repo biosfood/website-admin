@@ -84,12 +84,13 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
       row: ({node, ...props}: {node: any}) => <Row justify="space-around" {...props}/>,
       spacer: (props: object) => <Spacer {...props}/>,
       container: (props: object) => <Container {...props}/>,
-      projectcard: ({href, title, description}: {href: string, title: string, description: string}) => {
-        return <Card variant="bordered" isPressable onPress={() => router.push(getHref(href))}>
-            <Card.Header><Text h3>{title}</Text></Card.Header>
+      projectcard: ({href, title, description, imgSrc}: {href: string, title: string, description: string, imgSrc: string}) => {
+        return <Card variant="bordered" isPressable onPress={() => router.push(getHref(href))} css={{margin: "0.5em"}}>
+            <Card.Header><Text h2 style={{textAlign: "center", width: "100%"}}>{title}</Text></Card.Header>
             <Card.Body>
               <Grid.Container>
-                <Grid><Text>{description}</Text></Grid>
+                <Grid sm><Image css={{margin: "0.5em"}} src={imgSrc}/></Grid>
+                <Grid sm><Text css={{margin: "0.5em"}}>{description}</Text></Grid>
               </Grid.Container>
             </Card.Body>
           </Card>
