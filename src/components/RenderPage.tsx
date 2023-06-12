@@ -33,6 +33,17 @@ const icons = {
   Makefile: "vscode-icons:file-type-makefile",
   C: "devicon:c",
   Nasm: "logos:nasm",
+  HTML: "vscode-icons:file-type-html",
+  CSS: "vscode-icons:file-type-css",
+  JS: "vscode-icons:file-type-js-official",
+  NPM: "logos:npm",
+  TS: "skill-icons:typescript",
+  React: "devicon:react-wordmark",
+  Angular: "logos:angular-icon",
+  SQL: "logos:mysql",
+  Node: "skill-icons:nodejs-dark",
+  PHP: "logos:php",
+  Rails: "skill-icons:rails",
 }
 
 export default function RenderPage({children, basePath, onNavigate}: {children: ReactNode, basePath: string, onNavigate?: () => void}) {
@@ -92,16 +103,16 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
       row: ({node, ...props}: {node: any}) => <Row justify="space-around" {...props}/>,
       spacer: (props: object) => <Spacer {...props}/>,
       container: (props: object) => <Container {...props}/>,
-      projectcard: ({href, title, description, imgSrc, github, git, ...props}:
-                    {href: string, title: string, description: string, imgSrc: string, github?: string, git?: string}) => {
+      projectcard: ({href, title, description, imgSrc, github, git, children, ...props}:
+                    {href: string, title: string, description: string, imgSrc: string, github?: string, git?: string, children: ReactNode}) => {
         return <Card variant="bordered" isPressable onPress={() => router.push(getHref(href))} css={{margin: "0.5em"}}>
             <Card.Header><Text h2 style={{textAlign: "center", width: "100%"}}>{title}</Text></Card.Header>
             <Card.Body>
               <Grid.Container>
-                <Grid sm><Image css={{margin: "0.5em"}} src={imgSrc}/></Grid>
+                <Grid sm><Image css={{margin: "0.5em"}} src={imgSrc} alt="project preview"/></Grid>
                 <Grid sm style={{width: "100%"}}>
                   <div style={{width: "100%", padding: "1em"}}>
-                    {description.split("\\n").map((part, index) => <Text key={index}>{part}</Text>)}
+                    {children}
                     <Row justify="space-around" style={{margin: "0.5em"}}>
                       {Object.keys(props).map((key: string) => key in icons && <Icon icon={icons[key as keyof typeof icons]} key={key} height="3em"/>)}
                     </Row>
