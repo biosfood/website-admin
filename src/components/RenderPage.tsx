@@ -94,8 +94,8 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
               <Grid.Container>
                 <Grid sm><Image css={{margin: "0.5em"}} src={imgSrc}/></Grid>
                 <Grid sm style={{width: "100%"}}>
-                  <div style={{width: "100%"}}>
-                    <Text style={{margin: "0.5em"}}>{description}</Text>
+                  <div style={{width: "100%", padding: "1em"}}>
+                    {description.split("\\n").map((part, index) => <Text key={index}>{part}</Text>)}
                     <Row justify="space-around" style={{margin: "0.5em"}}>
                       {hasMakefile != undefined && <Icon icon="vscode-icons:file-type-makefile" height="4em"/>}
                       {hasC != undefined && <Icon icon="devicon:c" height="4em"/>}
