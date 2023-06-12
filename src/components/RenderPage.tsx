@@ -3,12 +3,13 @@ import { ReactNode } from 'react'
 import Link from 'next/link'
 import rehypeRaw from 'rehype-raw'
 import remarkGfm from 'remark-gfm'
-import { Card, Table, Image, Text, Grid, Row, Spacer, Container, Button } from '@nextui-org/react';
+import { Card, Table, Image, Text, Grid, Row, Spacer, Container } from '@nextui-org/react';
 import Head from 'next/head'
 import {visit} from 'unist-util-visit'
 import remarkDirective from 'remark-directive'
 import queryString from 'query-string'
-import { useRouter } from "next/router";
+import { useRouter } from "next/router"
+import { Icon } from '@iconify/react';
 
 function customComponents() {
   return (tree: any) => {
@@ -84,16 +85,22 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
       row: ({node, ...props}: {node: any}) => <Row justify="space-around" {...props}/>,
       spacer: (props: object) => <Spacer {...props}/>,
       container: (props: object) => <Container {...props}/>,
-      projectcard: ({href, title, description, imgSrc, github, git}:
-                    {href: string, title: string, description: string, imgSrc: string, github?: string, git?: string}) => {
+      projectcard: ({href, title, description, imgSrc, github, git, hasC, hasMakefile, hasNasm}:
+                    {href: string, title: string, description: string, imgSrc: string, github?: string, git?: string, hasC?: any, hasMakefile?: any, hasNasm?: any}) => {
         return <Card variant="bordered" isPressable onPress={() => router.push(getHref(href))} css={{margin: "0.5em"}}>
             <Card.Header><Text h2 style={{textAlign: "center", width: "100%"}}>{title}</Text></Card.Header>
             <Card.Body>
               <Grid.Container>
                 <Grid sm><Image css={{margin: "0.5em"}} src={imgSrc}/></Grid>
-                <Grid sm>
-                    <Text css={{margin: "0.5em"}}>{description}</Text>
-                    {(github || git) && <Row justify="space-around">
+                <Grid sm style={{width: "100%"}}>
+                  <div style={{width: "100%"}}>
+                    <Text style={{margin: "0.5em"}}>{description}</Text>
+                    <Row justify="space-around" style={{margin: "0.5em"}}>
+                      {hasMakefile != undefined && <Icon icon="vscode-icons:file-type-makefile" height="4em"/>}
+                      {hasC != undefined && <Icon icon="devicon:c" height="4em"/>}
+                      {hasNasm != undefined && <Icon icon="logos:nasm" height="4em"/>}
+                    </Row>
+                    {(github || git) && <Row justify="space-around" style={{padding: "1em"}}>
                       {github && <Link href={github}>
                         <Card isPressable onPress={() => router.push(github)}>
                           <Card.Image src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"
@@ -101,12 +108,13 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
                         </Card>
                       </Link>}
                       {git && <Link href={git}>
-                        <Card isPressable onPress={() => router.push(git)}>
+                        <Card variant="bordered" isPressable onPress={() => router.push(git)}>
                           <Card.Image src="https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white"
                                       objectFit="cover" height="3em"/>
                         </Card>
                       </Link>}
                     </Row>}
+                  </div>
                 </Grid>
               </Grid.Container>
             </Card.Body>
