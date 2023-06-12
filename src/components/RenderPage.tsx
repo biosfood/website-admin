@@ -9,7 +9,8 @@ import {visit} from 'unist-util-visit'
 import remarkDirective from 'remark-directive'
 import queryString from 'query-string'
 import { useRouter } from "next/router"
-import { Icon } from '@iconify/react';
+import { Icon } from '@iconify/react'
+import { ImageButtonLink } from '@/components'
 
 function customComponents() {
   return (tree: any) => {
@@ -101,18 +102,10 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
                       {hasNasm != undefined && <Icon icon="logos:nasm" height="4em"/>}
                     </Row>
                     {(github || git) && <Row justify="space-around" style={{padding: "1em"}}>
-                      {github && <Link href={github}>
-                        <Card isPressable onPress={() => router.push(github)}>
-                          <Card.Image src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"
-                                      objectFit="cover" height="3em"/>
-                        </Card>
-                      </Link>}
-                      {git && <Link href={git}>
-                        <Card variant="bordered" isPressable onPress={() => router.push(git)}>
-                          <Card.Image src="https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white"
-                                      objectFit="cover" height="3em"/>
-                        </Card>
-                      </Link>}
+                      {github && <ImageButtonLink href={github} size="3em"
+                      src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/>}
+                      {git && <ImageButtonLink href={git} 
+                      src="https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white"/>}
                     </Row>}
                   </div>
                 </Grid>
