@@ -8,7 +8,6 @@ import Head from 'next/head'
 import {visit} from 'unist-util-visit'
 import remarkDirective from 'remark-directive'
 import queryString from 'query-string'
-import { useRouter } from "next/router"
 import { Icon } from '@iconify/react'
 import { ImageButtonLink } from '@/components'
 
@@ -47,7 +46,6 @@ const icons = {
 }
 
 export default function RenderPage({children, basePath, onNavigate}: {children: ReactNode, basePath: string, onNavigate?: () => void}) {
-  const router = useRouter()
   const getHref = (href?: string) => (href!.startsWith("/") ? basePath : "") + href!
   return (
   <ReactMarkdown
@@ -105,17 +103,28 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
       container: (props: object) => <Container {...props}/>,
       projectcard: ({href, title, description, imgSrc, github, git, children, ...props}:
                     {href: string, title: string, description: string, imgSrc: string, github?: string, git?: string, children: ReactNode}) => {
-        return <Card variant="bordered" isPressable onPress={() => router.push(getHref(href))} css={{margin: "0.5em"}}>
-            <Card.Header><Text h2 style={{textAlign: "center", width: "100%"}}>{title}</Text></Card.Header>
+        return <Card variant="bordered" css={{margin: "0.5em", marginBottom: "2em"}}>
+            <Card.Header>
+              <Link href={getHref(href)} style={{width: "100%"}}>
+                <Text h2 style={{textAlign: "center", width: "100%"}}>
+                  {title}
+                </Text>
+              </Link>
+            </Card.Header>
             <Card.Body>
               <Grid.Container>
-                <Grid sm><Image css={{margin: "0.5em"}} src={imgSrc} alt="project preview"/></Grid>
+                <Grid sm>
+                  <Link href={getHref(href)} style={{width: "100%"}}>
+                    <Image css={{margin: "0.5em"}} src={imgSrc} alt="project preview"/>
+                  </Link>
+                </Grid>
                 <Grid sm style={{width: "100%"}}>
                   <div style={{width: "100%", padding: "1em"}}>
                     {children}
-                    <Row justify="space-around" style={{margin: "0.5em"}}>
-                      {Object.keys(props).map((key: string) => key in icons && <Icon icon={icons[key as keyof typeof icons]} key={key} height="3em"/>)}
-                    </Row>
+                    <div style={{margin: "0.5em", display: "flex", flexDirection: "row", justifyContent: "space-around", flexWrap: "wrap"}}>
+                      {Object.keys(props).map((key: string) => key in icons &&
+                        <Icon icon={icons[key as keyof typeof icons]} key={key} height="3em" style={{margin: "1em"}}/>)}
+                    </div>
                     {(github || git) && <Row justify="space-around" style={{padding: "1em"}}>
                       {github && <ImageButtonLink href={github} size="3em"
                       src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/>}
