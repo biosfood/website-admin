@@ -43,10 +43,22 @@ const icons = {
   Node: "skill-icons:nodejs-dark",
   PHP: "logos:php",
   Rails: "skill-icons:rails",
+  CSharp: "vscode-icons:file-type-csharp2",
+  Unity: "mdi:unity",
+  Python: "logos:python",
+  Numpy: "devicon:numpy",
+  Matplotlib: "devicon:matplotlib",
+  Reveal: "simple-icons:revealdotjs",
+  Latex: "skill-icons:latex-dark",
+  Java: "devicon:java",
+  Kotlin: "logos:kotlin-icon",
+  Maven: "devicon:maven",
+  OpenGL: "devicon:opengl",
+
 }
 
 export default function RenderPage({children, basePath, onNavigate}: {children: ReactNode, basePath: string, onNavigate?: () => void}) {
-  const getHref = (href?: string) => (href!.startsWith("/") ? basePath : "") + href!
+  const getHref = (href?: string) => href && (href!.startsWith("/") ? basePath : "") + href! || ""
   return (
   <ReactMarkdown
     components={{
@@ -101,8 +113,8 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
       row: ({node, ...props}: {node: any}) => <Row justify="space-around" {...props}/>,
       spacer: (props: object) => <Spacer {...props}/>,
       container: (props: object) => <Container {...props}/>,
-      projectcard: ({href, title, description, imgSrc, github, git, children, ...props}:
-                    {href: string, title: string, description: string, imgSrc: string, github?: string, git?: string, children: ReactNode}) => {
+      projectcard: ({href, title, imgSrc, github, git, children, ...props}:
+                    {href?: string, title: string, imgSrc?: string, github?: string, git?: string, children: ReactNode}) => {
         return <Card variant="bordered" css={{margin: "0.5em", marginBottom: "2em"}}>
             <Card.Header>
               <Link href={getHref(href)} style={{width: "100%"}}>
@@ -113,17 +125,17 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
             </Card.Header>
             <Card.Body>
               <Grid.Container>
-                <Grid sm>
+                {imgSrc && <Grid sm>
                   <Link href={getHref(href)} style={{width: "100%"}}>
                     <Image css={{margin: "0.5em"}} src={imgSrc} alt="project preview"/>
                   </Link>
-                </Grid>
+                </Grid>}
                 <Grid sm style={{width: "100%"}}>
                   <div style={{width: "100%", padding: "1em"}}>
                     {children}
                     <div style={{margin: "0.5em", display: "flex", flexDirection: "row", justifyContent: "space-around", flexWrap: "wrap"}}>
                       {Object.keys(props).map((key: string) => key in icons &&
-                        <Icon icon={icons[key as keyof typeof icons]} key={key} height="3em" style={{margin: "1em"}}/>)}
+                        <div title={key}><Icon icon={icons[key as keyof typeof icons]} key={key} height="3em" style={{margin: "1em"}} /></div>)}
                     </div>
                     {(github || git) && <Row justify="space-around" style={{padding: "1em"}}>
                       {github && <ImageButtonLink href={github} size="3em"
