@@ -1,6 +1,6 @@
 import { Grid, Card, Row, Button, Text, Image as NextImage, Input, Spacer, FormElement, Modal, Container } from '@nextui-org/react';
 import { createAsset, deleteResource, updateUserData, retrieveAsset } from '@/api'
-import { useEffect, useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { Delete, Show } from 'react-iconly'
 import {useGlobalContext} from '@/context'
 import Head from 'next/head'
@@ -98,7 +98,7 @@ export default function Assets() {
   return (
     <>
       <Head>
-        <title>Assets</title>
+        <title>Images</title>
       </Head>
       {modal}
       <Grid.Container gap={2} justify="center">
@@ -106,7 +106,7 @@ export default function Assets() {
           <File style={{width: '100%'}}/>
         </Grid>
         {context.resources.filter((resource: Resource) => resource.resourceType == 'image').map((resource: Resource) => (
-            <Grid md key={resource.id} style={{width: '100%'}}>
+            <Grid sm key={resource.id} style={{minWidth: "20em"}}>
               <Card>
                 <Card.Header style={{display: 'flex', justifyContent: 'space-between'}}>
                   <Text h3>{resource.name}</Text>

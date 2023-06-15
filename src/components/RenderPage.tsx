@@ -3,13 +3,14 @@ import { ReactNode } from 'react'
 import Link from 'next/link'
 import rehypeRaw from 'rehype-raw'
 import remarkGfm from 'remark-gfm'
-import { Card, Table, Image, Text, Grid, Row, Spacer, Container } from '@nextui-org/react';
+import { Card, Table, Image, Text, Grid, Row, Spacer, Container, Button } from '@nextui-org/react';
 import Head from 'next/head'
 import {visit} from 'unist-util-visit'
 import remarkDirective from 'remark-directive'
 import queryString from 'query-string'
 import { Icon } from '@iconify/react'
 import { ImageButtonLink } from '@/components'
+import { useRouter } from "next/router"
 
 function customComponents() {
   return (tree: any) => {
@@ -54,11 +55,12 @@ const icons = {
   Kotlin: "logos:kotlin-icon",
   Maven: "devicon:maven",
   OpenGL: "devicon:opengl",
-
+  Apache: "devicon:apache",
 }
 
 export default function RenderPage({children, basePath, onNavigate}: {children: ReactNode, basePath: string, onNavigate?: () => void}) {
   const getHref = (href?: string) => href && (href!.startsWith("/") ? basePath : "") + href! || ""
+  const router = useRouter()
   return (
   <ReactMarkdown
     components={{
@@ -127,7 +129,7 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
               <Grid.Container>
                 {imgSrc && <Grid sm>
                   <Link href={getHref(href)} style={{width: "100%"}}>
-                    <Image css={{margin: "0.5em"}} src={imgSrc} alt="project preview"/>
+                    <Image src={imgSrc} alt="project preview"/>
                   </Link>
                 </Grid>}
                 <Grid sm style={{width: "100%"}}>
@@ -142,6 +144,9 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
                       src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/>}
                       {git && <ImageButtonLink href={git} 
                       src="https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white"/>}
+                    </Row>}
+                    {href && <Row justify="space-around" style={{padding: "1em"}}>
+                        <Link href={getHref(href)}><Button>more info</Button></Link>
                     </Row>}
                   </div>
                 </Grid>
