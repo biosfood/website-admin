@@ -117,7 +117,7 @@ function EditPageTemplate({context, setContext}: ContextState) {
           {mode == "edit" && (
             <Navbar.Content>
               <Navbar.Item>
-                <AssetPicker onPick={addImage}>
+                <AssetPicker onPick={addImage} showDescription>
                   <Dropdown.Button auto icon={<Image2 />}/>
                 </AssetPicker>
               </Navbar.Item>
