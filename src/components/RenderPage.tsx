@@ -56,6 +56,10 @@ const icons = {
   Maven: "devicon:maven",
   OpenGL: "devicon:opengl",
   Apache: "devicon:apache",
+  Android: "devicon:android",
+  Gradle: "logos:gradle",
+  MaterialUI: "devicon:materialui",
+  CPlusPlus: "logos:c-plusplus",
 }
 
 export default function RenderPage({children, basePath, onNavigate}: {children: ReactNode, basePath: string, onNavigate?: () => void}) {
@@ -137,7 +141,7 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
                     {children}
                     <div style={{margin: "0.5em", display: "flex", flexDirection: "row", justifyContent: "space-around", flexWrap: "wrap"}}>
                       {Object.keys(props).map((key: string) => key in icons &&
-                        <div title={key}><Icon icon={icons[key as keyof typeof icons]} key={key} height="3em" style={{margin: "1em"}} /></div>)}
+                        <div title={key} key={key}><Icon icon={icons[key as keyof typeof icons]} key={key} height="3em" style={{margin: "1em"}} /></div>)}
                     </div>
                     {(github || git) && <Row justify="space-around" style={{padding: "1em"}}>
                       {github && <ImageButtonLink href={github} size="3em"
