@@ -10,7 +10,6 @@ import remarkDirective from 'remark-directive'
 import queryString from 'query-string'
 import { Icon } from '@iconify/react'
 import { ImageButtonLink } from '@/components'
-import { useRouter } from "next/router"
 
 function customComponents() {
   return (tree: any) => {
@@ -64,12 +63,17 @@ const icons = {
 
 export default function RenderPage({children, basePath, onNavigate}: {children: ReactNode, basePath: string, onNavigate?: () => void}) {
   const getHref = (href?: string) => href && (href!.startsWith("/") ? basePath : "") + href! || ""
-  const router = useRouter()
   return (
   <ReactMarkdown
     components={{
       a: ({node, href, ...props}: {node: any, href?: string}) => {
-        return <Link {...props} href={getHref(href)} onClick={onNavigate}/>
+        let result: ReactNode = null
+        process.env.refreshURLs!.split(",").map((url: string) => {
+          if (href?.startsWith(url)) {
+            result = <a {...props} href={getHref(href)}/>
+          }
+        })
+        return result || <Link {...props} href={getHref(href)} onClick={onNavigate}/>
       },
       card: ({node, ...props}: {node: any}) => <Card><Card.Body {...props}/></Card>,
       table: ({children}: {node: any, children: ReactNode}) => {
