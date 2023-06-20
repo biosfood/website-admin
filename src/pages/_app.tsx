@@ -39,7 +39,7 @@ export default function App({ Component, pageProps }: AppProps) {
     return (
       <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '100vh'}}>
         <Head>
-          <link rel="icon" href="http://localhost:3000/favicon.svg" key="favicon"/>
+          <link rel="icon" href="/favicon.svg" key="favicon"/>
         </Head>
         <div>
           <Navigation/>
