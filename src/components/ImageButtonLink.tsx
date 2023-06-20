@@ -1,6 +1,6 @@
-import Link from 'next/link'
 import { Card } from '@nextui-org/react';
 import { useRouter } from "next/router"
+import { SaveLink as Link } from "@/components"
 
 export default function ImageButtonLink({href, src, size}: {href: string, src: string, size?: string}) {
   const router = useRouter()

@@ -1,6 +1,5 @@
 import ReactMarkdown from 'react-markdown'
 import { ReactNode } from 'react'
-import Link from 'next/link'
 import rehypeRaw from 'rehype-raw'
 import remarkGfm from 'remark-gfm'
 import { Card, Table, Image, Text, Grid, Row, Spacer, Container, Button } from '@nextui-org/react';
@@ -9,7 +8,7 @@ import {visit} from 'unist-util-visit'
 import remarkDirective from 'remark-directive'
 import queryString from 'query-string'
 import { Icon } from '@iconify/react'
-import { ImageButtonLink } from '@/components'
+import { ImageButtonLink, SaveLink as Link } from '@/components'
 
 function customComponents() {
   return (tree: any) => {
@@ -66,15 +65,7 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
   return (
   <ReactMarkdown
     components={{
-      a: ({node, href, ...props}: {node: any, href?: string}) => {
-        let result: ReactNode = null
-        process.env.refreshURLs!.split(",").map((url: string) => {
-          if (href?.startsWith(url)) {
-            result = <a {...props} href={getHref(href)}/>
-          }
-        })
-        return result || <Link {...props} href={getHref(href)} onClick={onNavigate}/>
-      },
+      a: ({href, ...props}: {href?: string}) => <Link href={getHref(href)} {...props} onNavigate={onNavigate}/>,
       card: ({node, ...props}: {node: any}) => <Card><Card.Body {...props}/></Card>,
       table: ({children}: {node: any, children: ReactNode}) => {
         if (!children) {
