@@ -4,6 +4,9 @@ import { ReactNode } from 'react'
 export default function SaveLink({onNavigate, href, ...props}:
                                  {onNavigate?: () => any, href: string, children?: ReactNode, style?: object}) {
   let result: ReactNode = null
+  if (!href || href == "") {
+    return <span {...props}/>
+  }
   process.env.refreshURLs!.split(",").map((url: string) => {
     if (href?.startsWith(url)) {
       result = <a {...props} href={href}/>
