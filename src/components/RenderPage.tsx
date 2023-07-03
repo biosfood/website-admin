@@ -104,8 +104,8 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
         }
         return <Text {...props}>{children as ReactNode}</Text>
       },
-      h1: ({node, ...props}: {node: any}) => <Text h1 {...props} style={{textAlign: "center", fontSize: "5em", margin: "1em"}}/>,
-      h2: ({node, ...props}: {node: any}) => <Text h2 {...props} style={{textAlign: "center", fontSize: "3em", margin: "0.5em"}}/>,
+      h1: ({node, ...props}: {node: any}) => <Text h1 {...props} style={{textAlign: "center", fontSize: "5em", marginTop: "1em", marginBottom: "1em"}}/>,
+      h2: ({node, ...props}: {node: any}) => <Text h2 {...props} style={{textAlign: "center", fontSize: "3em", marginTop: "0.5em", marginBottom: "0.5em"}}/>,
       gridcontainer: ({node, children, ...props}: {node: any, children?: any[]}) => {
         return (<Grid.Container {...props}>
           {children?.map((child, index) => <Grid xs key={index}>{child}</Grid>)}
