@@ -92,7 +92,7 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
         const params = alt.includes("?") ? queryString.parse(alt.split("?")[1]) : {}
         props = {...props, ...params}
         alt = alt.split("?")[0]
-        return <Image {...props} src={src} alt={alt} objectFit="cover"/>
+        return <Image {...props} src={src} alt={alt} objectFit="cover" containerCss={{margin: (params["margin"] || "") as string}}/>
       },
       p: ({node, children, ...props}: {node: any, children: {type?: {name: string}}[]}) => {
         var hasText = false;
