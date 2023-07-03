@@ -138,10 +138,10 @@ export default function RenderPage({children, basePath, onNavigate}: {children: 
                       {Object.keys(props).map((key: string) => key in icons &&
                         <div title={key} key={key}><Icon icon={icons[key as keyof typeof icons]} key={key} height="3em" style={{margin: "1em"}} /></div>)}
                     </div>
-                    {(github || git) && <Row justify="space-around" style={{padding: "1em"}}>
-                      {github && <ImageButtonLink href={github} size="3em"
+                    {(github || git) && <Row justify="space-around" style={{paddingTop: "1em"}} wrap="wrap">
+                      {github && <ImageButtonLink href={github} size="3em" style={{padding: "0.5em"}}
                       src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/>}
-                      {git && <ImageButtonLink href={git} 
+                      {git && <ImageButtonLink href={git} size="3em" style={{padding: "0.5em"}}
                       src="https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white"/>}
                     </Row>}
                     {href && <Row justify="space-around" style={{padding: "1em"}}>
